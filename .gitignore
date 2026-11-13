@@ -1,6 +1,5 @@
 .venv/
 .DS_Store
-*.mp4
 **/xuat/tieng/
 **/xuat/hinh/
 **/xuat/loi-ke.wav

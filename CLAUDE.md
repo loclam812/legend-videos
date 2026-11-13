@@ -132,6 +132,6 @@ Nobody can judge the picture from the code, so look at it.
   than adding a second `stroke-width`.
 - **A recording can hang.** One run of `quay.js` sat for 13 minutes with no output and no cause
   found; the rerun was fine. If it runs far longer than the video, stop it and run it again.
-- **GitHub rejects any file over 100 MB.** The exported videos are committed and are 53 MB and
-  70 MB. A longer video needs a lower bitrate (`-crf` in `ghep.js`) or must stay out of git.
+- **Exported mp4 files stay out of git** (`*.mp4` is ignored). They are 53 MB and 70 MB, GitHub
+  rejects any file over 100 MB, and `./xuat.sh` rebuilds them.
 - No music or sound effects yet. Lip movement is a loop, not synced to syllables.

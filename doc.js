@@ -21,6 +21,9 @@ const VOICES = {
   "Sơn Tinh": [NAM, "+6Hz", "+0%"],
   "Thủy Tinh": [NAM, "-32Hz", "-6%"],
   "Mị Nương": [NU, "+16Hz", "+0%"],
+  "Gióng": [NAM, "+10Hz", "+0%"],
+  "Mẹ": [NU, "-6Hz", "-4%"],
+  "Sứ giả": [NAM, "+0Hz", "+0%"],
 };
 
 const useSay = process.argv[3] === "say";

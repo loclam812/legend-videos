@@ -8,6 +8,7 @@ its own copy of the engine.
 |---|---|---|
 | `mai-an-tiem-video/` | Mai An Tiêm (the watermelon legend), 19 shots | `su-tich-dua-hau.mp4` |
 | `son-tinh-thuy-tinh-video/` | Sơn Tinh Thủy Tinh, 12 shots | `son-tinh-thuy-tinh.mp4` |
+| `thanh-giong-video/` | Thánh Gióng, 12 shots | `thanh-giong.mp4` |
 
 Talk to the user in Vietnamese. Narration and on-screen text are Vietnamese. Code, comments and
 commit messages are English.

@@ -23,7 +23,7 @@ const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 const readTime = (text) => 900 + text.length * 85;
 // window.DURS is injected by the mp4 export: per-line durations that match the recorded narration
 const DURS = window.DURS || null;
-const lineTime = (i, j) => (DURS ? DURS[i][j] : readTime(SHOTS[i].lines[j][1]));
+const lineTime = (i, j) => (DURS ? DURS[i][j] : SHOTS[i].lines[j][2] || readTime(SHOTS[i].lines[j][1]));
 const shotTime = (i) => SHOTS[i].lines.reduce((sum, _, j) => sum + lineTime(i, j), 500);
 
 function camT([cx, cy, z]) {
@@ -34,7 +34,21 @@ function camT([cx, cy, z]) {
 
 function setCap(who, text) {
   capWho.textContent = who ? who + ": " : "";
-  capTxt.textContent = who ? `“${text}”` : text;
+  capTxt.textContent = text;
+}
+
+// one caption line at a time: break after punctuation where possible, never mid-word
+function chunks(text, max = 46) {
+  const parts = [];
+  let cur = "";
+  for (const word of text.split(" ")) {
+    const full = cur.length + word.length + 1 > max;
+    const pause = /[,.;:!?]$/.test(cur) && cur.length >= max / 2;
+    if (cur && (full || pause)) { parts.push(cur); cur = word; } else cur = cur ? cur + " " + word : word;
+  }
+  if (cur) parts.push(cur);
+  if (parts.length > 1 && parts[parts.length - 1].length < 12) { const last = parts.pop(); parts[parts.length - 1] += " " + last; }
+  return parts;
 }
 
 function show(i) {
@@ -79,10 +93,19 @@ async function play(from = 0) {
   for (let i = Math.max(0, from); i < SHOTS.length; i++) {
     show(i);
     for (const [j, [who, text]] of SHOTS[i].lines.entries()) {
-      setCap(who, text);
+      const shown = who ? `“${text}”` : text;
       scenes[i].dataset.talk = who || "";
-      if (voiceOn) { await speak(who, text); due = performance.now(); } else await until(lineTime(i, j));
-      if (mine !== run) return;
+      if (voiceOn) { setCap(who, shown); await speak(who, text); due = performance.now(); if (mine !== run) return; continue; }
+      // each part stays up for its share of the line, by length
+      // a silent line (title card) has no words: hold the picture for its length
+      if (!text) { setCap(null, ""); await until(lineTime(i, j)); if (mine !== run) return; continue; }
+      const parts = chunks(shown);
+      const letters = parts.reduce((sum, part) => sum + part.length, 0);
+      for (const part of parts) {
+        setCap(who, part);
+        await until((lineTime(i, j) * part.length) / letters);
+        if (mine !== run) return;
+      }
     }
     scenes[i].dataset.talk = "";
     await until(500);

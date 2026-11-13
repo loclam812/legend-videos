@@ -7,6 +7,7 @@ const cloth = `<rect x="40" y="-200" width="70" height="26" rx="13" fill="#b5382
 
 SHOTS.push({
   label: "8",
+  mood: "wonder", sfx: [[0, "waves"], [0.5, "birds", 5]],
   art: beach({ top: "#3b3f7a", bot: "#fbd27a", sun: [380, 400, "#fff0b0"], seaC: "#3f7f8a", sandC: "#e6c58a", cloud: "#b8456b" })
     + `<g class="fly">${[[200, 180, 1], [300, 130, 0.8], [330, 230, 0.9], [440, 170, 1.1], [520, 250, 0.8], [600, 150, 0.9]].map(([x, y, s]) => bird(x, y, s)).join("")}</g>`
     + slice(730, 750, 0.6, 20) + slice(810, 770, 0.5, -30) + seeds(770, 790) + seeds(850, 800)
@@ -22,6 +23,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "9a",
+  mood: "calm", sfx: [[0, "waves"]],
   art: beach() + palm(1400, 620, 0.9)
     + `<ellipse cx="820" cy="810" rx="80" ry="20" fill="#d9b780" ${I(4)}/>` + seeds(810, 800) + shell(940, 800)
     + AT({ x: 690, y: 810, s: 1.1, aR: [70, -80], wR: [-22, 0.6], lean: [20, 0.6], nod: [10, 0.6] }),
@@ -31,6 +33,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "9b",
+  mood: "calm", sfx: [[0, "waves"]],
   art: beach() + palm(1400, 620, 0.9)
     + pop(vine(520, 790, 520, 1), 520, 790, 0.3) + pop(vine(600, 850, 480, 1), 600, 850, 1.2)
     + AT({ x: 430, y: 810, s: 1.05, aR: [74, -110], hR: shell(84, -112), wR: [20, 0.7], lean: [8, 0.7], nod: [8, 1] })
@@ -41,6 +44,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "9c",
+  mood: "calm", sfx: [[0, "waves"], [1.5, "chime"]],
   art: beach() + hut(1300, 640, 0.8) + palm(1480, 640, 0.9) + field()
     + [[240, 700, 46], [520, 690, 40], [900, 680, 44], [1250, 700, 42], [380, 780, 54], [760, 790, 58], [1120, 800, 52], [250, 850, 50], [600, 860, 48]]
       .map(([x, y, r], i) => pop(melon(x, y, r), x, y + r, 0.4 + i * 0.45)).join("")
@@ -51,6 +55,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "10",
+  mood: "bright", sfx: [[0, "waves"], [1.6, "whack"]],
   art: beach({ top: "#7fcfe6", bot: "#fbf0c4", sun: [1300, 200, "#f6c453"] }) + vine(60, 690, 640) + vine(900, 700, 640)
     + melons([[200, 690, 44], [1300, 700, 46], [1480, 760, 40]])
     + AT({ x: 520, y: 820, s: 1.15, aR: [66, -205], hR: slice(70, -222, 0.7), wR: [-16, 0.5], nod: [7, 0.5] })
@@ -67,6 +72,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "11",
+  mood: "calm", sfx: [[0, "waves"], [5.5, "splash"]],
   art: sky("#f08a6b", "#fdeec4") + sunDisc(1200, 400, "#fff0b0") + clouds("#ffffff", 0.5) + islands() + sea(400) + glints(1200)
     + `<g class="drift">${melon(760, 505, 30, 1)}${melon(960, 470, 24, 1)}${melon(1150, 446, 18, 1)}${melon(1330, 428, 13, 1)}</g>`
     + sand()
@@ -82,6 +88,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "12",
+  mood: "bright", sfx: [[0, "waves"]],
   art: beach() + palm(80, 640, 1) + house(330, 700, 1, "#c98b4a", "#7a5a34")
     + slideIn(boat(1500, 480, 0.9, "#e9b66a"), 260, 7) + slideIn(boat(1260, 520, 1.3), 340, 5)
     + NB({ x: 470, y: 800, s: 0.9, aR: [58, -226], wR: [-22, 0.45], nod: [5, 1] }) + SON({ x: 550, y: 810, s: 0.55, body: "jump", aL: [-56, -230], aR: [56, -230] })
@@ -99,6 +106,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "13a",
+  mood: "calm",
   art: `<rect width="1600" height="900" fill="#7a3b22"/><circle cx="800" cy="420" r="520" fill="url(#glow)"/><path d="M250 0V830M1350 0V830" fill="none" stroke="#4d2a18" stroke-width="50"/>` + throne()
     + `<rect x="-10" y="830" width="1620" height="80" fill="#4d2a18" ${I()}/>` + lamp(330, 330) + lamp(1270, 330)
     + EXTRA({ x: 480, y: 860, s: 1.1, c: "#4a6a7a", walk: [-360, 3], aR: [70, -150], wR: [-8, 1, 3], lean: [12, 1.2, 3] })
@@ -112,6 +120,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "13b",
+  mood: "bright", sfx: [[0.5, "horn"]],
   art: sky("#7fcfe6", "#fbf0c4") + sunDisc(1300, 160) + clouds() + hills() + house(250, 560, 0.8) + sea(520, "#4a90a0")
     + slideIn(boat(1300, 690, 1.6, "#f3e6c4", melon(-90, -40, 34) + melon(-20, -46, 36) + melon(60, -40, 34) + melon(-55, -86, 30) + melon(20, -90, 30)), 300, 3)
     + `<rect x="-10" y="720" width="1620" height="190" fill="#a8703f" ${I()}/><path d="M-10 780H1610M-10 840H1610" fill="none" ${I(3)}/><rect x="-10" y="720" width="1620" height="190" fill="url(#fadeDown)"/>`
@@ -128,6 +137,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "14a",
+  mood: "bright",
   art: sky("#7fcfe6", "#f6f0c8") + sunDisc(1300, 180) + clouds() + hills() + ground(600, "#b98d4a")
     + vine(60, 650, 700) + vine(860, 660, 700) + vine(100, 730, 420) + vine(1150, 740, 420)
     + [[150, 650, 34], [420, 660, 32], [980, 650, 34], [1330, 660, 36], [1500, 740, 44], [120, 760, 44]].map(([x, y, r], i) => pop(melon(x, y, r), x, y + r, 2 + i * 0.7)).join("")
@@ -144,6 +154,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "14b",
+  mood: "bright",
   art: altar(),
   cam: [[800, 610, 5], [800, 450, 1]],
   lines: [
@@ -153,3 +164,5 @@ SHOTS.push({
 });
 
 ["fade", "zoom", "slide", "slide", "black", "black", "fade", "slide", "fade", "slide", "fade", "fade", "zoom", "slide", "slide", "black", "slide", "fade", "zoom"].forEach((tr, i) => { SHOTS[i].tr = tr; });
+SHOTS.unshift(titleShot("SỰ TÍCH DƯA HẤU", "#8fd0e0", "#f6e7b8"));
+SHOTS.push(endShot("#8fd0e0", "#f6e7b8"));

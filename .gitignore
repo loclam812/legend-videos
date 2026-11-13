@@ -7,3 +7,8 @@
 **/xuat/durs.json
 .env
 *.mp4
+**/xuat/nen.wav
+**/xuat/khung-hinh.jpg
+.giong/
+giong-thu/
+**/xuat/giong-luu/

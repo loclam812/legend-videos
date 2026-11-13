@@ -6,6 +6,7 @@ const spear = `<path d="M64 -350V-40" fill="none" ${I(7)}/><path d="M52 -330L64 
 
 SHOTS.push({
   label: "1",
+  mood: "bright",
   art: altar(),
   cam: [[800, 450, 1], [800, 610, 7]],
   ease: "cubic-bezier(.6,0,.9,.4)",
@@ -17,6 +18,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "2",
+  mood: "calm",
   art: sky("#bfe3e6", "#f8dca0") + sunDisc(1250, 200) + clouds("#ffffff", 0.6) + hills() + house(330, 660, 1.2) + house(1320, 650, 1) + ground(640, "#d9a85c") + drum(600, 730)
     + EXTRA({ x: 430, y: 800, s: 1.05, c: "#6f7f4a", walk: [-320, 3.2], aR: [70, -150], wR: [-10, 0.9, 3.2] })
     + person({ x: 760, y: 810, s: 0.75, tunic: "#a8703f", walk: [-320, 3], lean: [16, 0.9, 3.2], nod: [8, 0.9, 3.2] })
@@ -30,6 +32,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "3",
+  mood: "calm",
   art: sky("#f0a060", "#f8dc98") + sunDisc(300, 330, "#fff0b0") + clouds("#b8456b", 0.35) + hills("#8fae62") + ground(640, "#d9a85c") + house(800, 690, 1.7, "#d19a55")
     + granary(250, 740) + granary(390, 770) + granary(1290, 750) + granary(1430, 780)
     + basket(520, 840, 1.1)
@@ -46,6 +49,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "4",
+  mood: "bright",
   art: `<rect width="1600" height="900" fill="#6b3a22"/>` + dongson(800, 300, 260, "#f2c14e", 0.22) + `<path d="M200 0V700M1400 0V700" fill="none" stroke="#4d2a18" stroke-width="40"/><rect width="1600" height="900" fill="url(#fadeDown)"/>`
     + lamp(430, 200) + lamp(1150, 200)
     + EXTRA({ x: 260, y: 770, c: "#6f7f4a", aR: [60, -210], mood: "open", wR: [-18, 0.5], hR: bowl(62, -222), nod: [6, 0.7] })
@@ -65,6 +69,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "5",
+  mood: "tense", sfx: [[2.6, "drum"]],
   art: `<rect width="1600" height="900" fill="#5a1d18"/><circle cx="800" cy="420" r="520" fill="#8a2a20" opacity=".6"/><path d="M250 0V830M1350 0V830" fill="none" stroke="#3a1410" stroke-width="50"/>` + throne()
     + ground(830, "#3a1410")
     + EXTRA({ x: 500, y: 850, s: 1.1, c: "#4a4a6a", mood: "angry", aR: [70, -210], wR: [-14, 0.5], lean: [9, 1.1], nod: [8, 0.8] })
@@ -80,6 +85,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "6",
+  mood: "sad", sfx: [[0, "waves"]],
   art: beach({ top: "#7f8c96", bot: "#d9d6c6", seaC: "#4a7480", sandC: "#d8c08e", cloud: "#5f6a74" })
     + boat(1050, 480, 1.1, "#d9d4c8",
       EXTRA({ x: -70, y: 10, s: 0.42, c: "#4a4a6a" }) + EXTRA({ x: 70, y: 10, s: 0.42, c: "#4a4a6a", aR: [60, -220], wR: [-20, 0.6] }), "away")
@@ -97,6 +103,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "7a",
+  mood: "sad", sfx: [[0, "waves"]],
   art: beach({ top: "#3b3f7a", bot: "#f0a868", sun: [1250, 400, "#ffd08a"], seaC: "#35607a", sandC: "#d9b780", cloud: "#b8456b" })
     + AT({ x: 660, y: 810, s: 1.2, aR: [112, -150], wR: [-9, 0.9], nod: [6, 1.6], lean: [4, 1.8] })
     + SON({ x: 800, y: 822, s: 0.65, mood: "sad", nod: [-12, 1.4], aR: [40, -150], wR: [-10, 1.2] })
@@ -110,6 +117,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "7b",
+  mood: "calm", sfx: [[0, "waves"]],
   art: beach() + palm(200, 640, 1) + hut(480, 680, 1.2) + fire(720, 760)
     + SON({ x: 290, y: 810, s: 0.55, walk: [-240, 3], aR: [50, -150], wR: [-14, 0.6, 3] })
     + NB({ x: 370, y: 800, s: 0.9, aR: [56, -130], hR: basket(64, -110, 0.6), wR: [-8, 1], lean: [8, 1.2], nod: [8, 1.2] })

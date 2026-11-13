@@ -150,3 +150,19 @@ function altar() {
     <ellipse cx="1210" cy="640" rx="210" ry="26" fill="#c9a15a" ${I()}/>${cake(1140, 582)}${cake(1280, 582)}${cake(1210, 488)}`
     + melon(1010, 560, 108) + shadow(810, 760, 170, 18) + melonCut(800, 610, 150);
 }
+
+const bigText = (x, y, text, size, fill = "#f6c453") => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Georgia, serif" font-weight="bold" font-size="${size}" fill="${fill}" stroke="${INK}" stroke-width="${size / 8}" paint-order="stroke" stroke-linejoin="round">${text}</text>`;
+const card = (top, bot, body) => sky(top, bot) + `<circle cx="800" cy="400" r="560" fill="url(#glow)"/>` + dongson(800, 400, 380, "#f2c14e", 0.4) + body;
+// opening card: held in silence while the music starts, so the first frames already say what the video is
+const titleShot = (title, top, bot) => ({
+  label: "mở đầu", mood: "bright", sfx: [[0.2, "gong"]],
+  art: card(top, bot, bigText(800, 420, title, Math.min(160, 2000 / title.length)) + bigText(800, 560, "Truyện cổ tích Việt Nam", 58, "#fffaf0")),
+  cam: [[800, 450, 1.14], [800, 450, 1]],
+  lines: [[null, "", 3500]],
+});
+const endShot = (top, bot) => ({
+  label: "kết", mood: "bright", sfx: [[0.2, "chime"]],
+  art: card(top, bot, bigText(800, 380, "Cảm ơn các bạn đã xem!", 96) + bigText(800, 520, "Đăng ký kênh để nghe thêm truyện cổ tích", 54, "#fffaf0")),
+  cam: [[800, 450, 1], [800, 450, 1.1]],
+  lines: [[null, "Cảm ơn các bạn đã theo dõi. Hẹn gặp lại các bạn ở câu chuyện sau nhé!"]],
+});

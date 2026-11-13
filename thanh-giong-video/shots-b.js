@@ -8,6 +8,7 @@ const dropped = (x, y, rot) => `<g transform="translate(${x} ${y}) rotate(${rot}
 
 SHOTS.push({
   label: "7",
+  mood: "bright", sfx: [[12.6, "pop"]],
   art: yard("#f0b070", "#fdeec4", sunDisc(1300, 300, "#fff0b0") + clouds("#ffffff", 0.5)) + clump(1540, 700, 0.8)
     + ME({ x: 330, y: 850, s: 1.05, mood: "open", aL: [-40, -200], aR: [40, -200], nod: [6, 1.2] })
     + pot(760, 850, 1.1)
@@ -26,6 +27,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "8",
+  mood: "tense", sfx: [[2, "hooves", 4.5], [11, "drum"], [11, "chime"]],
   art: yard("#f08a6b", "#fdeec4", sunDisc(340, 400, "#fff0b0") + clouds("#ffffff", 0.5))
     + BO({ x: 150, y: 850, s: 1, mood: "open", aL: [-50, -230], aR: [50, -230], nod: [-8, 1.2] })
     + ME({ x: 300, y: 856, s: 1, mood: "open", aL: [-36, -204], aR: [36, -204], nod: [-8, 1.4] })
@@ -41,6 +43,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "9",
+  mood: "battle", sfx: [[0, "hooves", 4.5], [4.6, "whoosh"], [7.5, "whoosh"], [10, "whoosh"]],
   art: battlefield()
     + fleeing([[1150, 800, 1], [1290, 850, 1.1], [1430, 800, 1], [1560, 856, 1.1]], 18)
     + move(rider(520, 850, 1.35, { aR: [70, -214], hR: whip, wR: [-34, 0.35], nod: [4, 0.5], mood: "angry" }, 1), -980, 0, 4.5),
@@ -53,6 +56,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "10",
+  mood: "battle", sfx: [[0, "hooves", 3.4], [0.8, "whack"], [5, "whack"], [6, "whack"], [7, "whack"], [8, "whack"]],
   art: battlefield() + clump(150, 700, 1) + clump(1010, 660, 0.7)
     + dropped(880, 870, -8) + dropped(1180, 880, 12)
     + `<g transform="translate(380 874) rotate(16)">${line2("M-60 0H0", "#5b3a20", 8)}${line2("M0 0q30 -14 50 6", "#5f646e", 5)}</g>`
@@ -67,6 +71,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "11",
+  mood: "wonder", sfx: [[4.6, "chime"], [4.6, "whoosh"]],
   art: sky("#4a3f7a", "#f0a868") + sunDisc(300, 420, "#ffd08a") + clouds("#b8456b", 0.4, 150)
     + mountain(760, 960, 1300, 620, "#5f8a66")
     + pop(`<g transform="translate(640 566) scale(.62)">${shadow(0, -100, 60)}<g transform="translate(0 0)">${armor}</g><g transform="translate(70 150)">${helmet}</g></g>`, 640, 400, 5.6)
@@ -81,6 +86,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "12",
+  mood: "bright", sfx: [[0, "gong"]],
   art: sky("#7fcfe6", "#f6f0c8") + sunDisc(300, 180) + clouds()
     + `<g opacity=".6"><circle cx="1290" cy="170" r="200" fill="url(#glow)"/>${rider(1290, 250, 0.42, { aR: [60, -230], wR: [-16, 0.8] }, 0, 1)}</g>`
     + hills() + house(800, 650, 1.25, "#b5382a", "#7a2a1c") + dongson(800, 400, 60, "#f2c14e", 0.9)
@@ -101,3 +107,5 @@ SHOTS.push({
 });
 
 ["fade", "slide", "black", "black", "fade", "slide", "black", "zoom", "slide", "slide", "black", "fade"].forEach((tr, i) => { SHOTS[i].tr = tr; });
+SHOTS.unshift(titleShot("THÁNH GIÓNG", "#8fd0e0", "#f8e6b0"));
+SHOTS.push(endShot("#8fd0e0", "#f8e6b0"));

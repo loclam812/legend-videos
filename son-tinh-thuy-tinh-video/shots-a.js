@@ -87,6 +87,7 @@ const hall = (c = "#7a3b22") => `<rect width="1600" height="900" fill="${c}"/><c
 
 SHOTS.push({
   label: "1",
+  mood: "tense", sfx: [[0, "rain", 12.5], [2.8, "thunder"], [6, "thunder"], [9.2, "thunder"]],
   art: sky("#2f3a52", "#7f8c96") + mountain(1250, 900, 760, 520, "#4f7260") + mountain(800, 900, 1100, 660, "#5f8a66") + stormClouds() + bigWave(760, "#3f6f8a", 70, 1.6) + rain(0.55) + lightning(420) + lightning(1180, 1.4),
   cam: [[800, 450, 1], [800, 400, 1.5]],
   lines: [
@@ -97,6 +98,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "2",
+  mood: "calm",
   art: hall()
     + KING({ x: 720, y: 850, s: 1.5, aL: [-70, -160], wL: [-12, 1], nod: [-6, 1.4] })
     + MN({ x: 1000, y: 860, s: 1.3, walk: [380, 3.4], nod: [7, 1.3, 3.4], aL: [-30, -150], aR: [30, -150] }),
@@ -109,6 +111,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "3",
+  mood: "bright",
   art: sky("#8fd0e0", "#f8e6b0") + sunDisc(1300, 180) + clouds()
     + move(mountain(260, 660, 420, 330, "#6f9a5a"), 0, 400, 3, 3) + move(mountain(620, 660, 520, 430, "#5f8f5a"), 0, 500, 3.4, 4.6) + move(mountain(980, 660, 400, 300, "#7fa86a"), 0, 380, 3, 6.4)
     + ground(640, "#d9a85c") + house(1420, 700, 1)
@@ -123,6 +126,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "4",
+  mood: "tense", sfx: [[0, "rain", 10], [2.8, "thunder"], [6, "thunder"], [9.2, "thunder"]],
   art: sky("#3b4a6a", "#9aa6ac") + hills("#6f8f6a") + house(230, 700, 1) + ground(640, "#b99a66")
     + move(stormClouds(), 900, 0, 5) + move(bigWave(700, "#2f6f8f", 60, 1.8), 0, 260, 5, 3)
     + KING({ x: 420, y: 800, s: 1.05, mood: "open", lean: [-7, 1.4], nod: [6, 1] }) + MN({ x: 540, y: 806, s: 0.95, mood: "sad", aR: [36, -200], aL: [-36, -200], body: "tremble" })
@@ -137,6 +141,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "5",
+  mood: "calm", sfx: [[9, "pop"], [10.6, "pop"], [12.2, "pop"]],
   art: hall("#6b3a22")
     + ST({ x: 440, y: 860, s: 1.25, aR: [60, -150], lean: [8, 1.4], nod: [6, 1.4] })
     + TT({ x: 1160, y: 860, s: 1.25, flip: 1, aR: [60, -150], lean: [8, 1.6], nod: [6, 1.1] })
@@ -153,6 +158,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "6",
+  mood: "bright",
   art: courtyard("#f08a6b", "#fdeec4", sunDisc(300, 420, "#fff0b0") + clouds("#ffffff", 0.5))
     + KING({ x: 1180, y: 830, s: 1.1, aL: [-70, -220], wL: [20, 0.6], nod: [-5, 1.2] })
     + MN({ x: 1290, y: 836, s: 1, nod: [-7, 1.3], aL: [-30, -150], aR: [30, -150] })

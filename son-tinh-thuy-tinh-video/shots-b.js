@@ -8,6 +8,7 @@ const stormSky = () => sky("#232c44", "#6f7c8a") + stormClouds("#2e3444");
 
 SHOTS.push({
   label: "7",
+  mood: "tense",
   art: sky("#4a3f7a", "#f0a868") + sunDisc(260, 420, "#ffd08a") + clouds("#b8456b", 0.4)
     + mountain(330, 660, 620, 470, "#5f8a66")
     + ST({ x: 300, y: 330, s: 0.42, walk: [90, 9, 0, 110], aR: [50, -220], wR: [-16, 0.6] }) + MN({ x: 350, y: 336, s: 0.4, walk: [90, 9, 0, 110] })
@@ -24,6 +25,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "8",
+  mood: "battle", sfx: [[0, "rain", 10.4], [2.8, "thunder"], [6, "thunder"], [9.2, "thunder"]],
   art: stormSky() + hills("#5f7f62") + house(360, 690, 1) + house(1150, 700, 0.9) + palm(760, 700, 0.8) + ground(660, "#a88a5a")
     + move(bigWave(560, "#2f6f8f", 80, 1.4) + serpent(520, 640, 1) + fish(980, 700, 1) + fish(1300, 760, 0.8, "#e8705a"), 0, 380, 9)
     + move(TT({ x: 1250, y: 520, s: 1.3, flip: 1, aL: [-72, -240], aR: [72, -240], wL: [26, 0.45], wR: [-26, 0.45], nod: [-5, 0.6] }), 0, 380, 9)
@@ -37,6 +39,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "9",
+  mood: "battle", sfx: [[0, "rain", 12.4], [2.8, "thunder"], [6, "thunder"], [9.2, "thunder"]],
   art: stormSky()
     + move(mountain(800, 960, 1250, 700, "#5f8f5a") + rock(560, 520, 50) + rock(1010, 560, 44)
       + MN({ x: 900, y: 330, s: 0.8, mood: "sad", aL: [-30, -196], aR: [30, -196] })
@@ -52,6 +55,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "10",
+  mood: "wonder",
   art: sky("#5f7a9a", "#f8dca0") + sunDisc(380, 240, "#fff0b0") + clouds("#ffffff", 0.45)
     + mountain(700, 960, 1250, 680, "#5f8f5a")
     + ST({ x: 660, y: 350, s: 0.95, body: "jump", aL: [-66, -244], aR: [66, -244] }) + MN({ x: 790, y: 358, s: 0.8, aR: [44, -226], wR: [-20, 0.5], nod: [-6, 1] })
@@ -63,6 +67,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "11",
+  mood: "tense", sfx: [[0, "rain", 13]],
   art: sky("#4a5a74", "#aab4b8") + stormClouds("#4a5060") + mountain(1250, 700, 760, 520, "#5f8a66") + hills("#6f8f6a") + house(1180, 720, 0.9) + ground(700, "#a88a5a")
     + bigWave(640, "#2f6f8f", 60, 1.8)
     + TT({ x: 180, y: 640, s: 0.8, aL: [-72, -240], aR: [72, -240], wL: [26, 0.5], wR: [-26, 0.5] })
@@ -81,6 +86,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "12",
+  mood: "bright",
   art: sky("#7fcfe6", "#f6f0c8") + sunDisc(1300, 180) + clouds()
     + mountain(420, 700, 820, 560, "#5f8f5a")
     + ST({ x: 380, y: 196, s: 0.6, aR: [60, -230], wR: [-20, 0.6] }) + MN({ x: 450, y: 200, s: 0.55, aL: [-56, -226], wL: [20, 0.6] })
@@ -98,3 +104,5 @@ SHOTS.push({
 });
 
 ["fade", "black", "slide", "slide", "black", "fade", "slide", "black", "zoom", "fade", "black", "fade"].forEach((tr, i) => { SHOTS[i].tr = tr; });
+SHOTS.unshift(titleShot("SƠN TINH THỦY TINH", "#2f3a52", "#7f8c96"));
+SHOTS.push(endShot("#2f3a52", "#7f8c96"));

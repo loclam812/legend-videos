@@ -86,6 +86,7 @@ const badge = (pic, x, y, d) => pop(`<g transform="translate(${x} ${y})"><circle
 
 SHOTS.push({
   label: "1",
+  mood: "calm",
   art: sky("#8fd0e0", "#f8e6b0") + sunDisc(1280, 190) + clouds() + hills() + house(290, 650, 1) + clump(1460, 690, 0.9) + paddy(640)
     + BO({ x: 660, y: 830, s: 1.1, aR: [60, -150], hR: hoe, wR: [16, 0.6], lean: [9, 0.6], nod: [4, 1.2] })
     + ME({ x: 930, y: 840, s: 1.05, aL: [-58, -150], hL: basket(-70, -138, 0.6), aR: [40, -196], wR: [-10, 1.1], nod: [6, 1.5] }),
@@ -98,6 +99,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "2",
+  mood: "calm", sfx: [[5.2, "chime"]],
   art: sky("#9fd8e6", "#f6efc0") + clouds("#ffffff", 0.5, 120) + hills("#7fa86a") + clump(120, 640, 0.8) + paddy(600)
     + footprint(1000, 770, 1.25)
     + ME({ x: 600, y: 810, s: 1.2, walk: [-460, 3.6], mood: "open", aL: [-58, -226], aR: [58, -226], wL: [14, 0.7, 3.6], wR: [-14, 0.7, 3.6], nod: [9, 1.3, 3.6] }),
@@ -111,6 +113,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "3",
+  mood: "sad",
   art: room() + bed(520, 690, 400) + lying(890, 664, 0.6)
     + ME({ x: 1090, y: 860, s: 1.25, flip: 1, mood: "sad", aL: [-30, -150], aR: [60, -170], wR: [8, 1.4], nod: [9, 1.8], lean: [5, 2] })
     + BO({ x: 1290, y: 866, s: 1.2, flip: 1, mood: "sad", nod: [8, 2.2], aL: [-30, -140], aR: [30, -140] }),
@@ -123,6 +126,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "4",
+  mood: "tense", sfx: [[0, "fire", 13], [0.5, "march", 5.5]],
   art: sky("#4a2436", "#f08a4a") + sunDisc(820, 440, "#ffb060") + clouds("#2a1a2e", 0.5, 110) + hills("#5a4a44")
     + house(290, 650, 1, "#7a5a3a", "#4a2a20") + blaze(210, 350, 1.3) + blaze(390, 356, 1) + house(720, 640, 0.75, "#7a5a3a", "#4a2a20") + blaze(720, 416, 0.9)
     + ground(640, "#8a6a4a")
@@ -137,6 +141,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "5",
+  mood: "calm", sfx: [[1.5, "horn"]],
   art: yard("#8fd0e0", "#f8e6b0", sunDisc(1320, 170) + clouds()) + clump(1530, 700, 0.8)
     + bed(500, 740, 380) + lying(850, 714, 0.6, { mood: "open" })
     + ME({ x: 1000, y: 860, s: 1.15, flip: 1, mood: "open", aL: [-40, -210], aR: [40, -210], nod: [8, 1], body: "tremble" })
@@ -150,6 +155,7 @@ SHOTS.push({
 
 SHOTS.push({
   label: "6",
+  mood: "bright", sfx: [[3.2, "pop"], [4.4, "pop"], [5.6, "pop"]],
   art: room("#a8743f") + bed(360, 700, 380)
     + GIONG({ x: 560, y: 700, s: 0.62, aR: [64, -226], wR: [-20, 0.5], nod: [5, 0.8] })
     + SU({ x: 960, y: 860, s: 1.2, flip: 1, mood: "open", lean: [9, 1.5], nod: [7, 1.2], aL: [-30, -150], aR: [30, -150] })

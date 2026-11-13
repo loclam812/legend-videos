@@ -26,7 +26,8 @@ commit messages are English.
 - `xuat/quay.js`, `xuat/ghep.js`: record and mux. Everything else under `xuat/` is generated
   and ignored by git.
 
-`doc.js` at the repo root is shared by all stories.
+Shared scripts at the repo root: `doc.js` (narration), `nhac.js` (music and sound effects),
+`kiem.js` (contact sheet), `bia.js` (thumbnail), `xuat.sh` (runs the whole export).
 
 ## Visual style
 
@@ -53,8 +54,18 @@ SHOTS.push({
 
 - `cam` is a list of `[centreX, centreY, zoom]` stops. The camera eases between them over the
   length of the shot.
-- `lines` is `[speaker, text]`. `null` is the narrator. One sentence per line, about 8 to 16
-  words, so each stays on screen long enough to read.
+- `lines` is `[speaker, text]`. `null` is the narrator. One sentence per line. The player shows
+  it one caption line at a time (`chunks()` in `player.js`), breaking after punctuation, each
+  part timed by its share of the line's letters.
+- `mood` picks the music: `calm`, `bright`, `sad`, `tense`, `battle` or `wonder`. Neighbouring
+  shots with the same mood share one unbroken piece. A shot without `mood` is silent under the voice.
+- `sfx` is `[[seconds, name, duration]]`, timed from the start of the shot: `chime`, `pop`, `drum`,
+  `gong`, `whoosh`, `whack`, `horn`, `hooves`, `march`, `fire`, `rain`, `thunder`. Add a cue only
+  for something the picture shows at that moment, and set its time from `xuat/durs.json`.
+- A line `[null, "", 3500]` is a silent hold of that many milliseconds.
+- `titleShot(title, skyTop, skyBottom)` and `endShot(skyTop, skyBottom)` in `helpers.js` make the
+  opening and closing cards. The last two lines of `shots-b.js` add them, after the transition
+  table, so the table still lists story shots only.
 - A speaker's mouth moves only when the name matches the character's `name` **and** the
   `[data-talk=...]` selectors near line 66 of `index.html` list that name. A new character
   needs a new selector there.
@@ -71,13 +82,16 @@ name` for the look and `aL, aR, wL, wR, hL, hR, nod, lean, body, walk` for the p
 - Swings (`wL`, `wR`, `nod`, `lean`) are `[degrees, seconds, delay]`.
 - `walk` is `[dx, seconds, delay, dy]`.
 - Every character in a shot gets at least one motion. A still figure looks like a broken frame.
+- The main picture never sits unchanged for more than about 2.5 seconds. A camera move or a new
+  caption does not count: something in the scene has to act.
 - Keep the whole figure inside the frame at every camera stop. A character at scale `s` is
   about `300 * s` tall above its `y`, so a figure on a mountain top is cut off first.
 
 ## Export to mp4
 
-Needs `node`, `ffmpeg`, Playwright with Chromium, and the macOS voice "Linh (Enhanced)"
-(System Settings, Accessibility, Spoken Content, System Voice, Manage Voices, Vietnamese).
+Needs `node`, `ffmpeg`, Playwright with Chromium and `edge-tts`. The fallback voice is the macOS
+"Linh (Enhanced)" (System Settings, Accessibility, Spoken Content, System Voice, Manage Voices,
+Vietnamese).
 
 One command from the repo root does all of it:
 
@@ -91,12 +105,26 @@ by git) and `xuat.sh` loads it.
 
 The script runs these steps, each reading what the one before wrote:
 
-1. `node doc.js <story-folder> say` reads every line with `say -v "Linh (Enhanced)" -r 165` and
-   writes `xuat/durs.json`. Line lengths drive the whole schedule.
-2. It serves the story folder on port 8765 and stops the server when it exits. It refuses to
+1. `node doc.js <story-folder>` reads every line and writes `xuat/durs.json`. Line lengths drive
+   the whole schedule. The narrator and women are `vi-VN-HoaiMyNeural`, men are
+   `vi-VN-NamMinhNeural`, each character with its own pitch in the `VOICES` table of `doc.js`.
+   These come from `.venv/bin/edge-tts` (`pip install edge-tts` in a venv at the repo root).
+2. `node nhac.js <story-folder>` computes the music and effects into `xuat/nen.wav`. Nothing is
+   sampled or downloaded, so there is no licence to track.
+3. It serves the story folder on port 8765 and stops the server when it exits. It refuses to
    run if the port is already taken, because the other server would serve the wrong story.
-3. `xuat/quay.js` records the page in real time.
-4. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at 1280x720, 30 fps.
+4. `xuat/quay.js` records the page in real time.
+5. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at 1280x720, 30 fps. The
+   music ducks under the voice and the mix is levelled to about -15 LUFS.
+6. `node kiem.js <story-folder>` writes `xuat/khung-hinh.jpg`: the middle and last frame of
+   every shot. Look at it before calling the export done.
+
+After a change to `mood` or `sfx` only, skip the recording: run `node nhac.js <story-folder>` and
+`node <story-folder>/xuat/ghep.js`.
+
+Thumbnail: `node bia.js <story-folder> <seconds> "<TITLE>" "<small line>"` writes `bia.jpg`
+(1280x720) from that frame. Pick a frame whose characters stand in the lower half, because the
+title covers the top.
 
 The output name is hard-coded on the `const out` line of each `ghep.js`. Change it when copying
 the folder for a new story.
@@ -109,8 +137,9 @@ Nobody can judge the picture from the code, so look at it.
   figures, objects floating above the ground and overlapping characters. `index.html?shot=N`
   shows one shot. `file:` URLs are blocked in the Playwright MCP browser, hence the server.
 - `kiem-tra.html` has the shot count hard-coded. Update it when shots are added or removed.
-- After export: run `ffprobe` for duration and the audio stream, and sample a few frames with
-  `ffmpeg -ss <t> -frames:v 1`.
+- After export: read `xuat/khung-hinh.jpg`, and compare the video and audio stream lengths with
+  `ffprobe`. The video runs about 2.8 s longer than the audio (the closing hold); any other gap
+  means picture and voice have drifted.
 - Claude cannot hear. Voice quality and mispronounced words are for the user to check, and the
   report must say so.
 
@@ -125,14 +154,17 @@ Nobody can judge the picture from the code, so look at it.
 
 ## Known traps
 
-- **edge-tts is not usable.** `doc.js` without `say` uses the free neural voices through
-  `.venv/bin/edge-tts`, with a male and a female voice per character. On 2026-11-13 the endpoint
-  refused most requests (`NoAudioReceived`); 7 of 60 lines came through in over 20 minutes.
-  Use `say`. It is one female voice for every character.
+- **The online voices refuse requests at random.** edge-tts is an unofficial free endpoint and
+  answers `NoAudioReceived` in bursts: on 2026-11-13 one run got 7 of 60 lines in 20 minutes, a
+  later one read 28 lines in 20 minutes. `doc.js` waits and retries, and keeps every line it got
+  in `xuat/giong-luu/` by voice and wording, so rerunning only fetches what is missing. When a
+  video is needed that day anyway, run `./xuat.sh <story-folder> say`: one local voice for all.
 - **A duplicate SVG attribute is ignored**: the first one wins. Pass the width to `I(w)` rather
   than adding a second `stroke-width`.
 - **A recording can hang.** One run of `quay.js` sat for 13 minutes with no output and no cause
   found; the rerun was fine. If it runs far longer than the video, stop it and run it again.
 - **Exported mp4 files stay out of git** (`*.mp4` is ignored). They are 53 MB and 70 MB, GitHub
   rejects any file over 100 MB, and `./xuat.sh` rebuilds them.
-- No music or sound effects yet. Lip movement is a loop, not synced to syllables.
+- Music and effects are synthesized and nobody has judged them by ear from inside this repo:
+  levels are measured, taste is not. Lip movement is a loop, not synced to syllables.
+- `player.js` and `xuat/ghep.js` are copies in each story. A fix to one goes into all of them.

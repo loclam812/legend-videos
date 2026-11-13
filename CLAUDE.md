@@ -78,20 +78,24 @@ name` for the look and `aL, aR, wL, wR, hL, hR, nod, lean, body, walk` for the p
 Needs `node`, `ffmpeg`, Playwright with Chromium, and the macOS voice "Linh (Enhanced)"
 (System Settings, Accessibility, Spoken Content, System Voice, Manage Voices, Vietnamese).
 
-Run in this order from the repo root. Each step reads what the one before wrote.
+One command from the repo root does all of it:
 
 ```bash
-node doc.js <story-folder> say
-(cd <story-folder> && python3 -m http.server 8765)
-PLAYWRIGHT_PATH=<path-to>/node_modules/playwright node <story-folder>/xuat/quay.js
-node <story-folder>/xuat/ghep.js
+./xuat.sh <story-folder>
 ```
 
-1. `doc.js ... say` reads every line with `say -v "Linh (Enhanced)" -r 165` and writes
-   `xuat/durs.json`. Line lengths drive the whole schedule, so rerun it after any text change.
-2. The server must stay up on port 8765 while `quay.js` runs. Stop it afterwards.
-3. `quay.js` records in real time, so it takes as long as the video. Wait for it to exit.
-4. `ghep.js` writes the mp4 next to the story folder's `index.html` at 1280x720, 30 fps.
+It takes about twice the length of the video. Playwright is not installed in this repo: put
+`PLAYWRIGHT_PATH=<path-to>/node_modules/playwright` in a `.env` file at the repo root (ignored
+by git) and `xuat.sh` loads it.
+
+The script runs these steps, each reading what the one before wrote:
+
+1. `node doc.js <story-folder> say` reads every line with `say -v "Linh (Enhanced)" -r 165` and
+   writes `xuat/durs.json`. Line lengths drive the whole schedule.
+2. It serves the story folder on port 8765 and stops the server when it exits. It refuses to
+   run if the port is already taken, because the other server would serve the wrong story.
+3. `xuat/quay.js` records the page in real time.
+4. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at 1280x720, 30 fps.
 
 The output name is hard-coded on the `const out` line of each `ghep.js`. Change it when copying
 the folder for a new story.

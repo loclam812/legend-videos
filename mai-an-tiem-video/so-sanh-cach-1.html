@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>So sánh — Cách 1: vẽ bằng mã, nâng chất lượng</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1c130e; color: #f6ead2; font-family: Georgia, "Times New Roman", serif; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+  .stage { position: relative; width: min(96vw, calc(86vh * 16 / 9)); aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; box-shadow: 0 12px 40px #000a; }
+  svg { display: block; width: 100%; height: 100%; }
+  .cap { position: absolute; left: 5%; right: 5%; bottom: 4.5%; text-align: center; font-size: clamp(13px, 2.1vw, 34px); line-height: 1.4; text-shadow: 0 2px 6px #000, 0 0 3px #000, 0 0 12px #000; }
+  .cap b { color: #f6c453; }
+
+  .cam { transform-origin: 1000px 600px; animation: cam 16s ease-in-out infinite alternate; }
+  @keyframes cam { from { transform: scale(1); } to { transform: scale(1.45); } }
+  .cloud { animation: cloud 40s linear infinite alternate; }
+  @keyframes cloud { to { transform: translateX(90px); } }
+  .wave { animation: wave 6s linear infinite; }
+  @keyframes wave { to { transform: translateX(-100px); } }
+  .foam { animation: foam 3.5s ease-in-out infinite alternate; }
+  @keyframes foam { to { transform: translate(14px, 7px); } }
+  .glint { animation: glint 1.6s ease-in-out infinite alternate; }
+  @keyframes glint { from { opacity: .35; } to { opacity: .95; } }
+  .fly { animation: fly 14s linear infinite; }
+  @keyframes fly { from { transform: translate(-500px, 60px); } to { transform: translate(1700px, -60px); } }
+  .flap { animation: flap .42s ease-in-out infinite alternate; }
+  @keyframes flap { to { transform: scaleY(-.35); } }
+  .peck { animation: peck .6s ease-in-out infinite alternate; }
+  @keyframes peck { to { transform: rotate(14deg); } }
+  .sway { transform-origin: 215px 250px; animation: sway 4s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
+  .breathe { animation: breathe 3s ease-in-out infinite alternate; }
+  @keyframes breathe { to { transform: translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce) { svg * { animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <svg viewBox="0 0 1600 900" role="img" aria-label="Cảnh 8: đàn chim lạ bay qua bãi biển lúc hoàng hôn, An Tiêm cầm hạt dưa">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2b2d5c"/><stop offset=".4" stop-color="#b8456b"/><stop offset=".72" stop-color="#f08a4b"/><stop offset="1" stop-color="#fbd27a"/>
+      </linearGradient>
+      <radialGradient id="glow"><stop offset="0" stop-color="#fff3c0" stop-opacity=".95"/><stop offset=".35" stop-color="#ffc56a" stop-opacity=".45"/><stop offset="1" stop-color="#ffc56a" stop-opacity="0"/></radialGradient>
+      <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#e9925a"/><stop offset=".25" stop-color="#3f7f8a"/><stop offset="1" stop-color="#1f4f66"/>
+      </linearGradient>
+      <linearGradient id="sandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d596"/><stop offset="1" stop-color="#c2935a"/></linearGradient>
+      <linearGradient id="skinG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f6c090"/><stop offset="1" stop-color="#c4845a"/></linearGradient>
+      <linearGradient id="tunicG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b07848"/><stop offset="1" stop-color="#6e4526"/></linearGradient>
+      <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+      <filter id="grain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/>
+        <feColorMatrix values="0 0 0 0 .23  0 0 0 0 .14  0 0 0 0 .09  0 0 0 .2 0"/>
+      </filter>
+      <path id="gull" d="M0 0C-20 -30 -60 -40 -92 -18C-60 -24 -30 -8 -8 10L0 16L8 10C30 -8 60 -24 92 -18C60 -40 20 -30 0 0Z"/>
+      <path id="frond" d="M0 0C70 -70 190 -70 280 14C190 -18 80 -8 0 0Z"/>
+    </defs>
+
+    <g class="cam">
+      <rect width="1600" height="440" fill="url(#sky)"/>
+      <circle cx="380" cy="430" r="430" fill="url(#glow)"/>
+      <g class="cloud" fill="#7a3a6a" opacity=".55">
+        <ellipse cx="980" cy="150" rx="260" ry="18"/><ellipse cx="1120" cy="176" rx="180" ry="12"/>
+        <ellipse cx="1380" cy="270" rx="220" ry="14"/><ellipse cx="640" cy="250" rx="150" ry="10"/>
+      </g>
+      <g class="cloud" fill="#ffb37a" opacity=".6" style="animation-duration:55s">
+        <ellipse cx="760" cy="330" rx="230" ry="12"/><ellipse cx="1240" cy="360" rx="200" ry="10"/><ellipse cx="130" cy="300" rx="170" ry="10"/>
+      </g>
+      <circle cx="380" cy="430" r="82" fill="#fff0b0"/>
+      <path d="M900 432q70 -46 150 -30q60 -34 120 4q50 6 90 26Z" fill="#5a3560" opacity=".8"/>
+      <path d="M1330 432q50 -30 110 -18q50 -8 90 18Z" fill="#6a3f68" opacity=".65"/>
+
+      <rect y="430" width="1600" height="470" fill="url(#seaG)"/>
+      <g class="glint" fill="#fff0b0">
+        <rect x="320" y="440" width="120" height="7" rx="3"/><rect x="300" y="462" width="160" height="8" rx="4"/><rect x="330" y="488" width="110" height="8" rx="4"/>
+        <rect x="290" y="514" width="190" height="9" rx="4"/><rect x="340" y="544" width="100" height="9" rx="4"/><rect x="300" y="574" width="170" height="10" rx="5"/>
+      </g>
+      <g fill="none" stroke="#ffe9c4" stroke-width="4" stroke-linecap="round" opacity=".45">
+        <path class="wave" d="M-200 480q25 -10 50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0"/>
+        <path class="wave" style="animation-delay:-2s" d="M-200 530q25 -12 50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0"/>
+      </g>
+
+      <path class="foam" d="M-40 618Q380 536 800 574T1640 556" fill="none" stroke="#fff8e8" stroke-width="16" stroke-linecap="round" opacity=".8"/>
+      <path d="M-20 618Q400 536 800 574T1620 556V920H-20Z" fill="url(#sandG)"/>
+      <path d="M-20 618Q400 536 800 574T1620 556V600Q1200 618 800 618T-20 662Z" fill="#a9824f" opacity=".45"/>
+      <g fill="#a67c48" opacity=".6">
+        <circle cx="520" cy="700" r="5"/><circle cx="640" cy="820" r="6"/><circle cx="930" cy="690" r="4"/><circle cx="1010" cy="790" r="5"/><circle cx="1420" cy="700" r="6"/><circle cx="1500" cy="820" r="4"/>
+        <ellipse cx="1330" cy="800" rx="16" ry="6"/><ellipse cx="1380" cy="770" rx="16" ry="6"/><ellipse cx="1420" cy="812" rx="16" ry="6"/>
+      </g>
+
+      <g class="fly">
+        <g transform="translate(260 170)"><use href="#gull" class="flap" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/></g>
+        <g transform="translate(400 110) scale(.75)"><use href="#gull" class="flap" style="animation-delay:-.15s" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/></g>
+        <g transform="translate(450 240) scale(.85)"><use href="#gull" class="flap" style="animation-delay:-.3s" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/></g>
+        <g transform="translate(600 160) scale(1.1)"><use href="#gull" class="flap" style="animation-delay:-.1s" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/></g>
+        <g transform="translate(720 260) scale(.7)"><use href="#gull" class="flap" style="animation-delay:-.25s" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/></g>
+        <g transform="translate(820 130) scale(.9)"><use href="#gull" class="flap" style="animation-delay:-.2s" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/></g>
+      </g>
+
+      <g>
+        <ellipse cx="770" cy="770" rx="150" ry="16" fill="#5a3a2a" opacity=".3" filter="url(#soft)"/>
+        <g transform="translate(730 750) rotate(18)">
+          <path d="M-52 0a52 52 0 0 0 104 0z" fill="#d8322f" stroke="#3a2418" stroke-width="4"/><path d="M-52 0a52 52 0 0 0 104 0" fill="none" stroke="#2e6b3a" stroke-width="10"/>
+          <path d="M-40 6a40 40 0 0 0 30 34" fill="none" stroke="#ff8a7a" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+          <ellipse cx="-14" cy="16" rx="4" ry="6" fill="#231510"/><ellipse cx="6" cy="26" rx="4" ry="6" fill="#231510"/><ellipse cx="22" cy="14" rx="4" ry="6" fill="#231510"/>
+        </g>
+        <g fill="#231510"><ellipse cx="800" cy="778" rx="5" ry="7"/><ellipse cx="822" cy="770" rx="5" ry="7" transform="rotate(30 822 770)"/><ellipse cx="846" cy="782" rx="5" ry="7" transform="rotate(-20 846 782)"/><ellipse cx="868" cy="768" rx="5" ry="7"/></g>
+        <g fill="#fff" opacity=".7"><circle cx="798" cy="775" r="1.6"/><circle cx="820" cy="767" r="1.6"/><circle cx="844" cy="779" r="1.6"/><circle cx="866" cy="765" r="1.6"/></g>
+        <g transform="translate(650 760)"><path d="M-6 -4v12M8 -4v12" stroke="#b5682a" stroke-width="3"/><g class="peck"><ellipse cx="0" cy="-24" rx="34" ry="22" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/><path d="M-30 -30q-26 -4 -40 12q24 0 40 -4z" fill="#d9d4c8" stroke="#3a2418" stroke-width="3"/><circle cx="30" cy="-44" r="14" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/><path d="M42 -42l20 8l-20 4z" fill="#f2a03c" stroke="#3a2418" stroke-width="2"/><circle cx="34" cy="-47" r="3" fill="#231510"/></g></g>
+        <g transform="translate(930 790) scale(-.85 .85)"><path d="M-6 -4v12M8 -4v12" stroke="#b5682a" stroke-width="3"/><g class="peck" style="animation-delay:-.3s"><ellipse cx="0" cy="-24" rx="34" ry="22" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/><path d="M-30 -30q-26 -4 -40 12q24 0 40 -4z" fill="#d9d4c8" stroke="#3a2418" stroke-width="3"/><circle cx="30" cy="-44" r="14" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/><path d="M42 -42l20 8l-20 4z" fill="#f2a03c" stroke="#3a2418" stroke-width="2"/><circle cx="34" cy="-47" r="3" fill="#231510"/></g></g>
+      </g>
+
+      <g transform="translate(1190 880)">
+        <ellipse cx="120" cy="4" rx="210" ry="22" fill="#4a2e22" opacity=".4" filter="url(#soft)"/>
+        <g class="breathe">
+          <g fill="url(#skinG)" stroke="#3a2418" stroke-width="5" stroke-linejoin="round">
+            <path d="M-34 -200C-40 -130 -36 -60 -30 -10L-2 -10C-4 -60 -2 -130 -4 -200Z"/><path d="M8 -200C10 -130 14 -60 16 -10L44 -10C44 -60 44 -130 40 -200Z"/>
+            <ellipse cx="-24" cy="-6" rx="28" ry="11"/><ellipse cx="34" cy="-6" rx="28" ry="11"/>
+          </g>
+          <path d="M56 -372C86 -330 88 -280 70 -240" fill="none" stroke="#3a2418" stroke-width="36" stroke-linecap="round"/>
+          <path d="M56 -372C86 -330 88 -280 70 -240" fill="none" stroke="#c4845a" stroke-width="26" stroke-linecap="round"/>
+          <path d="M-62 -190C-70 -260 -66 -330 -52 -384C-20 -402 28 -402 58 -384C72 -330 76 -260 70 -190C30 -176 -24 -176 -62 -190Z" fill="url(#tunicG)" stroke="#3a2418" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M-20 -200C-24 -236 -18 -262 -22 -282M26 -198C30 -234 24 -260 28 -282M-40 -310C-36 -340 -38 -360 -34 -378" fill="none" stroke="#4d2f18" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+          <path d="M-22 -396L4 -356L30 -396Z" fill="url(#skinG)" stroke="#3a2418" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M-66 -292C-20 -278 30 -278 73 -292" fill="none" stroke="#3a2418" stroke-width="22"/><path d="M-66 -292C-20 -278 30 -278 73 -292" fill="none" stroke="#e2b04a" stroke-width="14"/>
+          <path d="M-14 -282l-12 44M-4 -280l4 46" fill="none" stroke="#e2b04a" stroke-width="9" stroke-linecap="round"/><circle cx="-8" cy="-283" r="11" fill="#e2b04a" stroke="#3a2418" stroke-width="4"/>
+          <path d="M-50 -372C-92 -352 -132 -326 -176 -320" fill="none" stroke="#3a2418" stroke-width="36" stroke-linecap="round"/>
+          <path d="M-50 -372C-92 -352 -132 -326 -176 -320" fill="none" stroke="#f0b888" stroke-width="26" stroke-linecap="round"/>
+          <ellipse cx="-194" cy="-318" rx="28" ry="14" fill="#f6c090" stroke="#3a2418" stroke-width="5"/>
+          <g fill="#231510"><ellipse cx="-204" cy="-324" rx="5" ry="7" transform="rotate(20 -204 -324)"/><ellipse cx="-190" cy="-326" rx="5" ry="7"/><ellipse cx="-178" cy="-322" rx="5" ry="7" transform="rotate(-25 -178 -322)"/></g>
+          <rect x="-15" y="-424" width="30" height="40" fill="url(#skinG)" stroke="#3a2418" stroke-width="5"/>
+          <ellipse cx="50" cy="-458" rx="10" ry="15" fill="#c4845a" stroke="#3a2418" stroke-width="4"/>
+          <ellipse cx="0" cy="-462" rx="52" ry="56" fill="url(#skinG)" stroke="#3a2418" stroke-width="5"/>
+          <path d="M-52 -468C-56 -536 56 -536 52 -468C56 -450 52 -440 46 -436C46 -470 20 -498 -52 -468Z" fill="#231510" stroke="#3a2418" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="6" cy="-532" r="19" fill="#231510" stroke="#3a2418" stroke-width="4"/><path d="M-12 -516h36" stroke="#b5382a" stroke-width="8"/>
+          <circle cx="-30" cy="-440" r="11" fill="#e8705a" opacity=".3"/>
+          <ellipse cx="-24" cy="-460" rx="10" ry="8" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/><ellipse cx="12" cy="-460" rx="10" ry="8" fill="#fffaf0" stroke="#3a2418" stroke-width="3"/>
+          <circle cx="-28" cy="-458" r="5" fill="#231510"/><circle cx="8" cy="-458" r="5" fill="#231510"/>
+          <path d="M-38 -478q14 -10 26 -2M2 -480q12 -8 26 0" fill="none" stroke="#231510" stroke-width="5" stroke-linecap="round"/>
+          <path d="M-8 -454q-10 14 -2 20" fill="none" stroke="#9a5a3a" stroke-width="4" stroke-linecap="round"/>
+          <path d="M-26 -426q16 14 36 -2" fill="none" stroke="#3a2418" stroke-width="4" stroke-linecap="round"/>
+          <path d="M-50 -486C-58 -456 -52 -426 -38 -412M-60 -378C-72 -330 -74 -262 -66 -198" fill="none" stroke="#ffd98a" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+        </g>
+      </g>
+
+      <g fill="#2a1a2e">
+        <path d="M30 920C60 700 130 430 215 250L245 262C180 440 130 700 120 920Z"/>
+        <g class="sway">
+          <use href="#frond" transform="translate(215 250) rotate(-10)"/><use href="#frond" transform="translate(215 250) rotate(-50) scale(.9)"/>
+          <use href="#frond" transform="translate(215 250) rotate(28) scale(.85)"/><use href="#frond" transform="translate(215 250) scale(-1 1) rotate(-20) scale(.8)"/>
+          <use href="#frond" transform="translate(215 250) scale(-1 1) rotate(-62) scale(.7)"/><use href="#frond" transform="translate(215 250) rotate(-88) scale(.7)"/>
+        </g>
+      </g>
+      <rect width="1600" height="900" fill="#f08a4b" opacity=".08"/>
+    </g>
+    <rect width="1600" height="900" filter="url(#grain)" pointer-events="none"/>
+  </svg>
+  <div class="cap"><b>An Tiêm:</b> “Chim ăn được thì người cũng ăn được.”</div>
+</div>
+<div>Cách 1 — vẽ bằng mã, nâng chất lượng (cảnh 8)</div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+../bach-dang-video/shots-a.js

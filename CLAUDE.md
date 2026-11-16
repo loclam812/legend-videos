@@ -9,6 +9,8 @@ its own copy of the engine.
 | `mai-an-tiem-video/` | Mai An Tiêm (the watermelon legend), 19 shots | `su-tich-dua-hau.mp4` |
 | `son-tinh-thuy-tinh-video/` | Sơn Tinh Thủy Tinh, 12 shots | `son-tinh-thuy-tinh.mp4` |
 | `thanh-giong-video/` | Thánh Gióng, 12 shots | `thanh-giong.mp4` |
+| `bach-dang-video/` | Bạch Đằng 938 (Ngô Quyền), 15 shots | `bach-dang.mp4` |
+| `bach-dang-shorts/` | The same story as a 9:16 short, 22 shots and an end card | `bach-dang-shorts.mp4` |
 
 Talk to the user in Vietnamese. Narration and on-screen text are Vietnamese. Code, comments and
 commit messages are English.
@@ -27,7 +29,8 @@ commit messages are English.
   and ignored by git.
 
 Shared scripts at the repo root: `doc.js` (narration), `nhac.js` (music and sound effects),
-`kiem.js` (contact sheet), `bia.js` (thumbnail), `xuat.sh` (runs the whole export).
+`soat.js` (checks a shot list), `kiem.js` (contact sheet), `bia.js` (thumbnail), `xuat.sh` (runs
+the whole export).
 
 ## Visual style
 
@@ -73,6 +76,28 @@ SHOTS.push({
   `zoom` or `black`. Use `black` for a jump in time or place, `slide` for continuous action,
   `zoom` for a reveal, `fade` otherwise. The table length must equal the number of shots.
 
+## Two cuts of one story
+
+Bạch Đằng has a wide cut and a vertical cut that share one set of drawings.
+
+- `bach-dang-video/shots-a.js` pushes no shots. It holds the builders and `ART`, one function per
+  scene: `ART.wreck(o)` returns the SVG. `bach-dang-video/shots-b.js` is the wide shot list.
+- `bach-dang-shorts/` has its own `shots-b.js`, `index.html`, `player.js`, `kiem-tra.html` and
+  `xuat/`. Its `helpers.js`, `people.js` and `shots-a.js` are symlinks into `bach-dang-video/`, so
+  `cp -r` of that folder copies links, not files. Its shots set `tr` inline through `V(label, tr, ...)`:
+  no transition table and no title card.
+- The vertical frame is a 506.25x900 window on the same 1600x900 art, so `cam` stops mean the same
+  thing in both cuts. At zoom `z` it shows `506 / z` units of width: two figures further apart
+  than that cannot share a shot. It records at 1080x1920.
+- Anything that happens once (a tide, a ship sinking, a walk-in) takes `{ t, d, at }`: seconds,
+  delay, or `at: "start" | "end"` to hold it. A 3 s vertical shot passes a short `t` or an `at`,
+  never the wide cut's timing.
+- Vertical shots have one short sentence each. `hot: ["cọc", ...]` colours those caption words
+  yellow. Captions are upper case, two to four words at a time, at 62 % of the height: keep the
+  subject above that. `tr: "whip"` is a fast blurred slide, only in the vertical player.
+- `ring(x, y, r, delay)` and `arrow(x1, y1, x2, y2, delay)` draw the dotted yellow call-outs.
+- The keyframes and `[data-talk]` selectors exist in both `index.html` files: change both.
+
 ## Characters
 
 `person(o)` takes `x, y, s, flip, tunic, trim, long, hair, mood, beard, crown, hat, tone, extra,
@@ -114,7 +139,7 @@ The script runs these steps, each reading what the one before wrote:
 3. It serves the story folder on port 8765 and stops the server when it exits. It refuses to
    run if the port is already taken, because the other server would serve the wrong story.
 4. `xuat/quay.js` records the page in real time.
-5. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at 1280x720, 30 fps. The
+5. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at the recorded size (1280x720 wide, 1080x1920 vertical), 30 fps. The
    music ducks under the voice and the mix is levelled to about -15 LUFS.
 6. `node kiem.js <story-folder>` writes `xuat/khung-hinh.jpg`: the middle and last frame of
    every shot. Look at it before calling the export done.
@@ -133,12 +158,15 @@ the folder for a new story.
 
 Nobody can judge the picture from the code, so look at it.
 
+- `node soat.js <story-folder>` checks the shot list before any voice or recording is spent:
+  camera stops, speakers missing from `VOICES`, transitions, `hot` words. A warning that a camera
+  stop is clamped means the player will show a different framing from the one written.
 - Before recording: serve the folder and screenshot `kiem-tra.html`. Check each shot for cut-off
   figures, objects floating above the ground and overlapping characters. `index.html?shot=N`
   shows one shot. `file:` URLs are blocked in the Playwright MCP browser, hence the server.
 - `kiem-tra.html` has the shot count hard-coded. Update it when shots are added or removed.
 - After export: read `xuat/khung-hinh.jpg`, and compare the video and audio stream lengths with
-  `ffprobe`. The video runs about 2.8 s longer than the audio (the closing hold); any other gap
+  `ffprobe`. The video runs about 1.7 s longer than the audio (the closing hold); any other gap
   means picture and voice have drifted.
 - Claude cannot hear. Voice quality and mispronounced words are for the user to check, and the
   report must say so.
@@ -168,3 +196,4 @@ Nobody can judge the picture from the code, so look at it.
 - Music and effects are synthesized and nobody has judged them by ear from inside this repo:
   levels are measured, taste is not. Lip movement is a loop, not synced to syllables.
 - `player.js` and `xuat/ghep.js` are copies in each story. A fix to one goes into all of them.
+  `bach-dang-shorts/player.js` differs on purpose (frame size, captions): port fixes by hand.

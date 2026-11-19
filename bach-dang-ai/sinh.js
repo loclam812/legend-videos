@@ -12,9 +12,6 @@ const ENV = { ...process.env, HF_HOME: path.join(process.env.HOME, "ai-models/hf
 const STYLE = "3D animated family film still, stylized characters with slightly large heads and big expressive eyes, smooth skin, warm cinematic lighting, soft depth of field, rich detail, vertical composition with the subject in the upper two thirds of the frame";
 // a shot without people must not mention characters at all, or the model paints a face into the landscape
 const SCENERY = "3D animated family film background, a landscape with no characters, warm cinematic lighting, soft depth of field, rich detail, vertical composition";
-// paper-cut trial: each moving thing is its own image on flat magenta, keyed out later so the layers can move apart
-const PAPER = "Layered paper cut-out illustration, handmade craft paper collage with visible paper grain, bold dark outlines, flat warm colours, soft drop shadows between the paper layers, Vietnamese folk woodblock print feeling with curled cloud motifs";
-const KEY = "isolated on a flat solid pure magenta background, the whole background is one even magenta colour with no texture, no shadow and no gradient, nothing else in the picture, no text";
 const NGO = "a Vietnamese general of the tenth century in his early forties, tanned skin, short black beard and moustache, black hair tied in a topknot, a red cloth headband, bronze lamellar scale armour over a dark red tunic";
 const THAO = "a Southern Han prince, a grown man of about twenty-five with a lean adult face and a thin black moustache, proud look, a golden iron helmet with a white plume, golden lamellar armour over a blue tunic";
 const KING = "an old Southern Han king about sixty years old with a long white beard, a black flat-topped imperial crown with strings of beads hanging at the front and back, a dark blue robe with golden trim";
@@ -56,54 +53,7 @@ const IMAGES = {
   "c-ket": { empty: 1, prompt: `No people, no boats. Peaceful sunrise over ${RIVER}, calm golden water, soft mist, a wide empty sky filling the upper half of the frame.` },
 };
 
-Object.assign(IMAGES, {
-  "pc-sky": { style: PAPER, prompt: "A dusk sky made of layered torn paper bands from deep orange at the top to pale yellow at the bottom, one big round paper sun low in the middle, a few curled paper clouds. No mountains, no water, no people, no text." },
-  "pc-nui": { style: PAPER, size: [1024, 768], prompt: `A row of tall rounded limestone karst mountains cut from layered blue-grey and teal paper, side by side across the whole width, ${KEY}.` },
-  "pc-coc": { style: PAPER, size: [1024, 768], prompt: `One straight row of seven tall sharpened wooden stakes cut from brown paper, each with a dark grey iron-coloured paper point at the top, standing upright side by side with gaps between them, ${KEY}.` },
-  "pc-song": { style: PAPER, size: [1024, 768], prompt: `A wide band of ocean water made of layered teal and dark blue paper strips that fills the lower two thirds of the picture from edge to edge, its top edge is a wavy line of white curled paper wave crests; above the waves: ${KEY}.` },
-});
 
-// the full paper-cut cut: plates fill the frame, everything else is keyed out and moved as a puppet
-const PLATE = "No people, no animals, no text.";
-const PUPPET = (who) => ({ style: PAPER, size: [768, 1024], prompt: `One full-body paper puppet, the whole figure visible from head to feet: ${who}. Simple flat shapes, ${KEY}.` });
-const PROP = (what, size = [1024, 768]) => ({ style: PAPER, size, prompt: `${what}, ${KEY}.` });
-const NGO_P = "a Vietnamese general of the tenth century with black hair in a topknot, a red headband, a short black beard, bronze-yellow scale armour over a dark red tunic and brown boots";
-const CUNG_P = "an old king with a long white beard, a black flat-topped crown with hanging strings of beads, a dark blue robe with golden trim";
-const THAO_P = "a young prince with a thin black moustache, a golden helmet with a white plume, golden scale armour over a blue tunic";
-const LINH_P = "green cloth turbans, brown tunics with green sashes";
-Object.assign(IMAGES, {
-  "pl-dem": { style: PAPER, prompt: `A night sky made of layered dark blue torn paper bands, one big pale yellow paper full moon in the middle, small paper stars, a few curled paper clouds. No mountains, no water. ${PLATE}` },
-  "pl-ngay": { style: PAPER, prompt: `A bright morning sky made of layered pale blue and cream torn paper bands with curled white paper clouds and a small yellow paper sun in the upper left. No mountains, no water. ${PLATE}` },
-  "pl-xam": { style: PAPER, prompt: `A cloudy sky made of layered grey and pale blue torn paper bands with curled grey paper clouds. No mountains, no water. ${PLATE}` },
-  "pl-phu": { style: PAPER, prompt: `Inside an old Vietnamese wooden palace hall made of layered paper: dark red paper pillars on both sides, a brown paper wall with a round bronze drum sun pattern in the middle, a wooden paper floor in the lower third. ${PLATE}` },
-  "pl-han": { style: PAPER, prompt: `Inside a royal throne hall made of layered paper: dark blue paper walls with golden patterns, hanging yellow paper lanterns, dark blue pillars on both sides, a red paper carpet floor in the lower third. No throne. ${PLATE}` },
-  "pl-rung": { style: PAPER, prompt: `A green forest made of layered paper: tall brown paper tree trunks with round green paper crowns on both sides, pale rays of light, a grass paper ground in the lower third. ${PLATE}` },
-  "pl-coloa": { style: PAPER, prompt: `An ancient Vietnamese citadel made of layered paper: an earthen rampart with a wooden palisade across the middle, a wooden hall with a curved roof behind it, a bright sunrise sky with curled clouds, sandy paper ground in the lower third. ${PLATE}` },
-
-  "pc-thuyen2": PROP("One old Chinese war junk seen exactly from the side, three tall rectangular red paper sails, each sail crossed by many horizontal bamboo battens like a folding fan, a brown paper hull with a high stern and round shields along its side, the whole ship visible"),
-  "pc-ghe": PROP(`One small wooden rowing boat seen exactly from the side with two Vietnamese soldiers in ${LINH_P} sitting in it and rowing with oars, the whole boat visible`),
-  "pc-lua": PROP("A big flame shape made of layered red, orange and yellow paper tongues of fire, no wood", [768, 1024]),
-  "pc-bo": PROP("A long low strip of riverbank made of layered sand-coloured and green paper with a few grass tufts on top, reaching from the left edge to the right edge"),
-  "pc-coc1": PROP("One single tall sharpened wooden stake cut from brown paper with a dark grey iron point at the top, standing upright in the centre", [512, 1024]),
-
-  "pg-ngo": PUPPET(`${NGO_P}, standing, determined face, one arm stretched out pointing to the side`),
-  "pg-ngo-kiem": PUPPET(`${NGO_P}, standing with legs apart and raising a straight sword high above his head, shouting`),
-  "pg-ngo-vua": PUPPET("a Vietnamese king of the tenth century with black hair in a topknot, a short black beard, a simple golden headband and a long orange royal robe with golden trim, smiling with both arms raised"),
-  "pg-duong": PUPPET("an old Vietnamese lord with white hair in a topknot, a long white beard and a brown robe, standing calmly and reading a scroll"),
-  "pg-kieu": PUPPET("a scowling Vietnamese officer in a dark green robe with a black headband, creeping forward with a sword raised in one hand"),
-  "pg-cung": PUPPET(`${CUNG_P}, sitting on a golden throne with a stern face, one arm pointing forward`),
-  "pg-cung-khoc": PUPPET(`${CUNG_P}, standing with his head bowed and crying, one wide sleeve raised to his eyes`),
-  "pg-thao": PUPPET(`${THAO_P}, standing proudly with one fist on his chest`),
-  "pg-thao-so": PUPPET(`${THAO_P}, terrified with his mouth open and both arms thrown up in the air`),
-  "pg-su": PUPPET("a messenger with a short black beard in a plain dark green robe, kneeling on one knee and holding up a rolled letter with both hands, seen from the side"),
-  "pg-linh": PUPPET(`three Vietnamese foot soldiers with ${LINH_P} marching in a row, seen from the side, each carrying a tall spear`),
-  "pg-riu": PUPPET(`one Vietnamese soldier with ${LINH_P}, swinging an axe with both hands, seen from the side`),
-  "pg-dan": PUPPET(`a happy crowd of Vietnamese villagers and soldiers with ${LINH_P}, standing in two rows and cheering with raised arms`),
-  "pg-han": PUPPET("a group of four frightened Southern Han soldiers with round grey helmets with red plumes and blue tunics, waving their arms"),
-});
-
-// a keyed layer needs exact colours at its edges and stays PNG; everything else is kept as a much smaller JPEG
-const file = (name) => path.join(OUT, `${name}.${IMAGES[name].prompt.includes(KEY) ? "png" : "jpg"}`);
 
 const asked = process.argv.slice(2);
 if (!asked.length) { console.error("usage: node sinh.js all | <name[:seed]> ..."); process.exit(1); }
@@ -118,8 +68,8 @@ for (const [name, seed] of jobs) {
   const refs = (image.refs || []).map(file);
   const missing = refs.find((r) => !fs.existsSync(r));
   if (missing) { console.error(`${name}: reference ${missing} does not exist yet`); process.exit(1); }
-  const args = ["--model", "flux2-klein-4b", "--quantize", "4", "--steps", "4", "--seed", String(seed), "--width", String((image.size || [864])[0]), "--height", String((image.size || [0, 1536])[1]),
-    "--prompt", `${image.style || (image.empty ? SCENERY : STYLE)}. ${image.prompt}`, "--output", png, ...(refs.length ? ["--image-paths", ...refs] : [])];
+  const args = ["--model", "flux2-klein-4b", "--quantize", "4", "--steps", "4", "--seed", String(seed), "--width", "864", "--height", "1536",
+    "--prompt", `${image.empty ? SCENERY : STYLE}. ${image.prompt}`, "--output", png, ...(refs.length ? ["--image-paths", ...refs] : [])];
   // mflux never overwrites: it would write name_1.png beside the old image
   const png = path.join(OUT, `${name}.png`);
   for (const old of [png, file(name)]) fs.rmSync(old, { force: true });

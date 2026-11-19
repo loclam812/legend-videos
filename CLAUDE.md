@@ -1,8 +1,8 @@
 # Legend videos
 
 Animated Vietnamese folk tales for YouTube. Every export uses free tools only: no paid image,
-video or voice service. The story folders draw every frame as SVG by code; `bach-dang-ai/` is the
-exception and builds its picture from images a local model generates (see "Generated-image cuts"). Each story is one folder that holds
+video or voice service. The story folders draw every frame as SVG by code; the paper-cut stories and
+`bach-dang-ai/` build their picture from images a local model generates (see "Paper-cut stories"). Each story is one folder that holds
 its own copy of the engine.
 
 | Folder | Story | Output |
@@ -12,7 +12,6 @@ its own copy of the engine.
 | `thanh-giong-video/` | Thánh Gióng, 12 shots | `thanh-giong.mp4` |
 | `bach-dang-video/` | Bạch Đằng 938 (Ngô Quyền), 15 shots | `bach-dang.mp4` |
 | `bach-dang-shorts/` | The same story as a 9:16 short, 22 shots and an end card | `bach-dang-shorts.mp4` |
-| `bach-dang-ai/` | The same short from generated images: a 3D-film look and a paper-cut look | `bach-dang-ai.mp4`, `bach-dang-giay.mp4` |
 
 Talk to the user in Vietnamese. Narration and on-screen text are Vietnamese. Code, comments and
 commit messages are English.
@@ -100,48 +99,66 @@ Bạch Đằng has a wide cut and a vertical cut that share one set of drawings.
 - `ring(x, y, r, delay)` and `arrow(x1, y1, x2, y2, delay)` draw the dotted yellow call-outs.
 - The keyframes and `[data-talk]` selectors exist in both `index.html` files: change both.
 
-## Generated-image cuts
+## Paper-cut stories
 
-`bach-dang-ai/` holds two more cuts of the Bạch Đằng short. Both take their shot list, narration and
-line lengths from `bach-dang-shorts/` (run its export first), so only the picture differs.
+The newer look, and the one to use for a new story (the user chose it on 2026-11-19): every moving
+thing is a separate paper layer that a local model generates, and code moves the layers.
 
-- `sinh.js` generates the images into `anh/` with `mflux` and FLUX.2 klein 4B (Apache 2.0, so the
-  output may be monetised). The tool and the 15 GB model live outside the repo in `~/ai-models/`.
-  `node bach-dang-ai/sinh.js all` makes what is missing; `node bach-dang-ai/sinh.js c-5b:31` redoes
-  one image with another seed. An image takes 20 s on an idle machine and several minutes on a busy
-  one, and the machine is slow meanwhile.
-- A character stays the same person across shots through `refs`: the shot is generated from a
-  portrait (`ngo`, `thao`, `king`). A shot with no people must use the `empty` style, or the model
-  paints a face into the landscape.
-- `nhac.js` writes `am.m4a`: the narration over one unbroken pentatonic piece. The shared `nhac.js`
-  at the repo root restarts its random melody at every mood change, which sounds harsh in a cut of
-  3 s shots.
-- 3D-film cut: `index.html` shows one image per shot and moves it by code (camera, water ripple,
-  mist, fire). `LOOK` in that file holds the camera stops, rippling areas and effects per shot.
-  `node bach-dang-ai/quay.js` writes `bach-dang-ai.mp4`; `quay.js sheet` writes `kiem.jpg`.
-- Paper-cut cut: `giay.html` builds 13 scenes from separate paper layers. Plates (`pl-*`, `pc-sky`)
-  fill the frame; props (`pc-*`) and puppets (`pg-*`) are generated on flat magenta and keyed out in
-  the page, so each can move on its own. `SCENES` holds the choreography and `FLIP` records which
-  way each generated piece faces. `node bach-dang-ai/giay-quay.js` writes `bach-dang-giay.mp4`;
-  `giay-quay.js sheet` writes `giay-kiem.jpg`.
-- Run everything from the repo root with `.env` loaded, in this order:
+| Folder | Story | Output |
+|---|---|---|
+| `bach-dang-giay/` | Bạch Đằng 938, 23 shots, the same words as `bach-dang-shorts/` | `bach-dang-giay.mp4` |
+| `an-khe-giay/` | Ăn khế trả vàng, 19 shots | `an-khe-giay.mp4` |
 
-  ```bash
-  set -a; . ./.env; set +a
-  node bach-dang-ai/sinh.js all      # only when images are missing
-  node bach-dang-ai/nhac.js          # am.m4a
-  node bach-dang-ai/giay-quay.js     # or quay.js
-  ```
+A paper-cut story folder holds three files and `anh/`; the engine is shared in `giay/`:
 
-  `.env` needs `PLAYWRIGHT_PATH`, as for `xuat.sh`. When Playwright reports `Executable doesn't
-  exist`, its own Chromium build is gone from `~/Library/Caches/ms-playwright`: either reinstall it
-  (`npx playwright install chromium` where Playwright lives) or put `CHROME=<path to another
-  chrome-headless-shell>` in `.env`. Only the two recorders here read `CHROME`; `xuat.sh` does not.
-- Both recorders step the page frame by frame (`window.renderAt(seconds)`), so no frame is dropped.
-  Everything in those pages must be a function of time: no CSS animation, no `Date`.
-- Keyed layers stay PNG; every other image is stored as JPEG to keep the repo small.
-- Generated pictures are not checked against history: costumes, ships and helmets are the model's
-  guess from the prompt. Look at every image before using it.
+- `loi.js`: `const SHOTS = [{ label, mood, hot, lines: [[speaker, text]] }]`. One short sentence
+  per shot. A speaker other than `null` needs an entry in `VOICES` of `doc.js`. The last shot is
+  labelled `kết` and shows the title card.
+- `anh.js`: the layers, built with `plate` (full-frame backdrop, stored as jpg), `prop` and `puppet`
+  (painted on flat magenta and stored as png, so the page can key them out).
+- `canh.js`: `PLATES`, `CUTS` and `SCENES`, then `start({ plates, cuts, scenes, card })`. A scene
+  serves one or more shots in a row and draws them with `draw(ts, i, u)`: seconds since the scene
+  began, which of its shots is playing, seconds into that shot. A sheet of paper slides across when
+  the scene changes.
+- `giay/may.js` is the engine: `P(name, x, y, w, { rot, flip, alpha })` draws a layer with its
+  bottom centre at (x, y) on the 1080x1920 frame, and there are `plate`, `sea`, `rays`, `tag`,
+  `ring`, `bubble`, `shards`, `confetti`, `sparkles`, `tears`, `pop`, `hop`, `sm`. Everything drawn
+  must be a function of the time passed in: no CSS animation, no `Date`, no state between frames.
+
+Build a story from the repo root, in this order:
+
+```bash
+set -a; . ./.env; set +a
+node giay/sinh.js <story-folder> all     # the layers that are missing; <name>:<seed> redoes one
+node doc.js <story-folder>               # narration into xuat/tieng and xuat/durs.json
+node giay/nhac.js <story-folder>         # xuat/am.m4a: narration over the music
+node giay/quay.js <story-folder> sheet   # xuat/kiem.jpg: three frames of every shot. Look at it.
+node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4
+```
+
+- Generation uses `mflux` with FLUX.2 klein 4B (Apache 2.0, so the output may be monetised). The
+  tool and the 15 GB model live outside the repo in `~/ai-models/`. A layer takes 20 to 40 s on an
+  idle machine and minutes on a busy one, and the machine is slow meanwhile.
+- Look at every generated layer before placing it. Note which way a puppet faces (`pg-chim` flies
+  left as generated) and record it in the story's `canh.js`. Draw puppets in front of and below
+  the scenery they must not cover; the captions sit at about 1320 to 1430 px.
+- The lengths in `durs.json` come from the real voice. To lay out a story while the voice is still
+  being fetched, write estimated lengths there (about `1100 + 62 * letters` ms per line); `doc.js`
+  overwrites the file when it finishes.
+- `giay/nhac.js` plays one unbroken pentatonic piece and only adds or drops layers with the mood.
+  The root `nhac.js` restarts a random melody at every mood change, which sounds harsh in a cut of
+  short shots, and the user disliked it.
+- `giay/quay.js` steps the page frame by frame (`window.renderAt(seconds)`), so no frame is dropped.
+  `.env` needs `PLAYWRIGHT_PATH`. When Playwright reports `Executable doesn't exist`, its own
+  Chromium build is gone from `~/Library/Caches/ms-playwright`: reinstall it, or put
+  `CHROME=<path to another chrome-headless-shell>` in `.env`. Every recorder in the repo reads it.
+- Generated pictures are not checked against history or custom: costumes, ships and helmets are the
+  model's guess from the prompt.
+
+`bach-dang-ai/` is an earlier experiment kept for comparison: the same Bạch Đằng short as one
+3D-film-style still per shot, moved by code (`index.html`, `LOOK` per shot). It takes its words from
+`bach-dang-shorts/`. `node bach-dang-ai/sinh.js all`, `node bach-dang-ai/nhac.js`, then
+`node bach-dang-ai/quay.js` write `bach-dang-ai.mp4`. The user found it "so-so".
 
 ## Characters
 

@@ -1,0 +1,27 @@
+// The shot list of the paper-cut cut of Bạch Đằng 938: the same words as bach-dang-shorts.
+// label, mood (which layers of music play), caption words to colour, and the words.
+const SHOTS = [
+  { label: "hook", mood: "battle", hot: ["đánh tan"], lines: [[null, "Một dòng sông đã đánh tan cả đoàn thuyền chiến."]] },
+  { label: "hook 2", mood: "battle", hot: ["938", "Bạch Đằng"], lines: [[null, "Chuyện xảy ra năm 938, trên sông Bạch Đằng."]] },
+  { label: "1", mood: "tense", hot: ["giết"], lines: [[null, "Năm 937, Kiều Công Tiễn giết chủ tướng Dương Đình Nghệ."]] },
+  { label: "2", mood: "battle", hot: ["Ngô Quyền"], lines: [[null, "Ngô Quyền, con rể ông, kéo quân ra trị tội."]] },
+  { label: "3", mood: "tense", hot: ["Nam Hán"], lines: [[null, "Kiều Công Tiễn cho người cầu cứu Nam Hán."]] },
+  { label: "3b", mood: "tense", hot: ["Hoằng Tháo"], lines: [[null, "Vua Nam Hán sai con là Hoằng Tháo sang đánh."]] },
+  { label: "5", mood: "calm", hot: ["kế"], lines: [[null, "Nhưng Ngô Quyền đã có sẵn một kế."]] },
+  { label: "5b", mood: "calm", hot: ["cọc", "sắt"], lines: [["Ngô Quyền", "Ta sẽ đóng cọc bịt sắt dưới lòng sông."]] },
+  { label: "6", mood: "bright", hot: ["vót nhọn"], lines: [[null, "Quân lính lên rừng đốn gỗ, vót nhọn làm cọc."]] },
+  { label: "7", mood: "calm", hot: ["đóng cọc"], lines: [[null, "Họ đóng cọc xuống ngay cửa sông."]] },
+  { label: "8", mood: "wonder", hot: ["biến mất"], lines: [[null, "Nước triều lên, cả bãi cọc biến mất."]] },
+  { label: "8b", mood: "wonder", hot: ["cái bẫy"], lines: [[null, "Dưới mặt nước phẳng lặng là một cái bẫy."]] },
+  { label: "9", mood: "tense", hot: ["nước lên"], lines: [[null, "Thuyền Nam Hán vào cửa sông đúng lúc nước lên."]] },
+  { label: "9b", mood: "tense", hot: ["giả vờ thua"], lines: [[null, "Thuyền nhỏ ra khiêu chiến, rồi giả vờ thua chạy."]] },
+  { label: "10", mood: "battle", hot: ["đuổi theo"], lines: [[null, "Hoằng Tháo lập tức đuổi theo."]] },
+  { label: "11", mood: "battle", hot: ["cọc nhọn"], lines: [[null, "Rồi nước triều rút, hàng cọc nhọn hiện ra."]] },
+  { label: "11c", mood: "battle", hot: ["quay lại đánh"], lines: [[null, "Ngô Quyền ra lệnh toàn quân quay lại đánh."]] },
+  { label: "12", mood: "battle", hot: ["vỡ tan"], lines: [[null, "Thuyền giặc to nặng, đâm vào cọc sắt, vỡ tan."]] },
+  { label: "13", mood: "sad", hot: ["quá nửa", "bỏ mạng"], lines: [[null, "Quân Nam Hán chết đuối quá nửa, Hoằng Tháo bỏ mạng."]] },
+  { label: "14", mood: "sad", hot: ["rút quân"], lines: [[null, "Vua Nam Hán khóc con, rút quân về nước."]] },
+  { label: "15", mood: "bright", hot: ["xưng vương"], lines: [[null, "Năm 939, Ngô Quyền xưng vương ở Cổ Loa."]] },
+  { label: "15b", mood: "bright", hot: ["chấm dứt"], lines: [[null, "Hơn nghìn năm Bắc thuộc chấm dứt từ đây."]] },
+  { label: "kết", mood: "bright", hot: ["Theo dõi"], lines: [[null, "Theo dõi kênh để nghe thêm chuyện xưa nhé!"]] },
+];

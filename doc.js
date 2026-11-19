@@ -11,7 +11,8 @@ const root = path.resolve(process.argv[2]);
 const out = path.join(root, "xuat", "tieng");
 const keep = path.join(root, "xuat", "giong-luu");
 const tts = path.join(__dirname, ".venv", "bin", "edge-tts");
-const src = ["helpers.js", "people.js", "shots-a.js", "shots-b.js"].map((f) => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
+// an SVG story has the first four files; a paper-cut story (see giay/) has only loi.js, which declares SHOTS itself
+const src = ["helpers.js", "people.js", "shots-a.js", "shots-b.js", "loi.js"].map((f) => path.join(root, f)).filter(fs.existsSync).map((f) => fs.readFileSync(f, "utf8")).join("\n");
 const SHOTS = new Function(src + "\nreturn SHOTS;")();
 const PAD = 0.3;
 const NU = "vi-VN-HoaiMyNeural";
@@ -30,6 +31,7 @@ const VOICES = {
   "Mẹ": [NU, "-6Hz"],
   "Sứ giả": [NAM, ""],
   "Ngô Quyền": [NAM, "-6Hz"],
+  "Chim": [NAM, "+25Hz"],
 };
 
 const useSay = process.argv[3] === "say";

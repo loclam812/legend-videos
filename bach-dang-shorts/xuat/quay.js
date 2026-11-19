@@ -7,7 +7,8 @@ const durs = JSON.parse(fs.readFileSync(path.join(__dirname, "durs.json"), "utf8
 const SIZE = { width: 1080, height: 1920 };
 
 (async () => {
-  const browser = await chromium.launch();
+  // CHROME (from .env) points at another installed build when this Playwright's own one is missing
+  const browser = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
   const context = await browser.newContext({ viewport: SIZE, recordVideo: { dir: path.join(__dirname, "hinh"), size: SIZE } });
   await context.addInitScript((d) => { window.DURS = d; }, durs);
   const created = Date.now();

@@ -124,6 +124,19 @@ line lengths from `bach-dang-shorts/` (run its export first), so only the pictur
   the page, so each can move on its own. `SCENES` holds the choreography and `FLIP` records which
   way each generated piece faces. `node bach-dang-ai/giay-quay.js` writes `bach-dang-giay.mp4`;
   `giay-quay.js sheet` writes `giay-kiem.jpg`.
+- Run everything from the repo root with `.env` loaded, in this order:
+
+  ```bash
+  set -a; . ./.env; set +a
+  node bach-dang-ai/sinh.js all      # only when images are missing
+  node bach-dang-ai/nhac.js          # am.m4a
+  node bach-dang-ai/giay-quay.js     # or quay.js
+  ```
+
+  `.env` needs `PLAYWRIGHT_PATH`, as for `xuat.sh`. When Playwright reports `Executable doesn't
+  exist`, its own Chromium build is gone from `~/Library/Caches/ms-playwright`: either reinstall it
+  (`npx playwright install chromium` where Playwright lives) or put `CHROME=<path to another
+  chrome-headless-shell>` in `.env`. Only the two recorders here read `CHROME`; `xuat.sh` does not.
 - Both recorders step the page frame by frame (`window.renderAt(seconds)`), so no frame is dropped.
   Everything in those pages must be a function of time: no CSS animation, no `Date`.
 - Keyed layers stay PNG; every other image is stored as JPEG to keep the repo small.

@@ -1,7 +1,8 @@
 # Legend videos
 
-Animated Vietnamese folk tales for YouTube. Every frame is SVG drawn by code and every export
-uses free tools only: no paid image, video or voice service. Each story is one folder that holds
+Animated Vietnamese folk tales for YouTube. Every export uses free tools only: no paid image,
+video or voice service. The story folders draw every frame as SVG by code; `bach-dang-ai/` is the
+exception and builds its picture from images a local model generates (see "Generated-image cuts"). Each story is one folder that holds
 its own copy of the engine.
 
 | Folder | Story | Output |
@@ -11,6 +12,7 @@ its own copy of the engine.
 | `thanh-giong-video/` | Thánh Gióng, 12 shots | `thanh-giong.mp4` |
 | `bach-dang-video/` | Bạch Đằng 938 (Ngô Quyền), 15 shots | `bach-dang.mp4` |
 | `bach-dang-shorts/` | The same story as a 9:16 short, 22 shots and an end card | `bach-dang-shorts.mp4` |
+| `bach-dang-ai/` | The same short from generated images: a 3D-film look and a paper-cut look | `bach-dang-ai.mp4`, `bach-dang-giay.mp4` |
 
 Talk to the user in Vietnamese. Narration and on-screen text are Vietnamese. Code, comments and
 commit messages are English.
@@ -98,6 +100,36 @@ Bạch Đằng has a wide cut and a vertical cut that share one set of drawings.
 - `ring(x, y, r, delay)` and `arrow(x1, y1, x2, y2, delay)` draw the dotted yellow call-outs.
 - The keyframes and `[data-talk]` selectors exist in both `index.html` files: change both.
 
+## Generated-image cuts
+
+`bach-dang-ai/` holds two more cuts of the Bạch Đằng short. Both take their shot list, narration and
+line lengths from `bach-dang-shorts/` (run its export first), so only the picture differs.
+
+- `sinh.js` generates the images into `anh/` with `mflux` and FLUX.2 klein 4B (Apache 2.0, so the
+  output may be monetised). The tool and the 15 GB model live outside the repo in `~/ai-models/`.
+  `node bach-dang-ai/sinh.js all` makes what is missing; `node bach-dang-ai/sinh.js c-5b:31` redoes
+  one image with another seed. An image takes 20 s on an idle machine and several minutes on a busy
+  one, and the machine is slow meanwhile.
+- A character stays the same person across shots through `refs`: the shot is generated from a
+  portrait (`ngo`, `thao`, `king`). A shot with no people must use the `empty` style, or the model
+  paints a face into the landscape.
+- `nhac.js` writes `am.m4a`: the narration over one unbroken pentatonic piece. The shared `nhac.js`
+  at the repo root restarts its random melody at every mood change, which sounds harsh in a cut of
+  3 s shots.
+- 3D-film cut: `index.html` shows one image per shot and moves it by code (camera, water ripple,
+  mist, fire). `LOOK` in that file holds the camera stops, rippling areas and effects per shot.
+  `node bach-dang-ai/quay.js` writes `bach-dang-ai.mp4`; `quay.js sheet` writes `kiem.jpg`.
+- Paper-cut cut: `giay.html` builds 13 scenes from separate paper layers. Plates (`pl-*`, `pc-sky`)
+  fill the frame; props (`pc-*`) and puppets (`pg-*`) are generated on flat magenta and keyed out in
+  the page, so each can move on its own. `SCENES` holds the choreography and `FLIP` records which
+  way each generated piece faces. `node bach-dang-ai/giay-quay.js` writes `bach-dang-giay.mp4`;
+  `giay-quay.js sheet` writes `giay-kiem.jpg`.
+- Both recorders step the page frame by frame (`window.renderAt(seconds)`), so no frame is dropped.
+  Everything in those pages must be a function of time: no CSS animation, no `Date`.
+- Keyed layers stay PNG; every other image is stored as JPEG to keep the repo small.
+- Generated pictures are not checked against history: costumes, ships and helmets are the model's
+  guess from the prompt. Look at every image before using it.
+
 ## Characters
 
 `person(o)` takes `x, y, s, flip, tunic, trim, long, hair, mood, beard, crown, hat, tone, extra,
@@ -139,7 +171,7 @@ The script runs these steps, each reading what the one before wrote:
 3. It serves the story folder on port 8765 and stops the server when it exits. It refuses to
    run if the port is already taken, because the other server would serve the wrong story.
 4. `xuat/quay.js` records the page in real time.
-5. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at the recorded size (1280x720 wide, 1080x1920 vertical), 30 fps. The
+5. `xuat/ghep.js` writes the mp4 next to the story folder's `index.html` at the recorded size (1280x720 wide, 1080x1920 vertical). The two Bạch Đằng cuts write 25 fps, the rate Playwright records at; the older stories still write 30 fps and repeat every sixth frame. The
    music ducks under the voice and the mix is levelled to about -15 LUFS.
 6. `node kiem.js <story-folder>` writes `xuat/khung-hinh.jpg`: the middle and last frame of
    every shot. Look at it before calling the export done.

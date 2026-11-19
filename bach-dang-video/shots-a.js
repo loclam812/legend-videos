@@ -30,11 +30,11 @@ const AXE = line2("M0 30V-96", WOOD, 7) + `<path d="M-2 -100q34 -8 40 22q-22 8 -
 const MALLET = line2("M0 30V-90", WOOD, 7) + `<rect x="-30" y="-122" width="60" height="36" rx="6" fill="#5b3a20" ${I(4)}/>`;
 const BOW = `<path d="M0 -70Q46 0 0 70" fill="none" ${I(7)}/><path d="M0 -70V70" fill="none" stroke="#f6ead2" stroke-width="2"/>`;
 
-const NGO = (o) => person({ name: "Ngô Quyền", tunic: "#b5452a", trim: "#f2c14e", hat: band("#d8322f") + chinBeard, extra: plate("#c9a15a"), ...o });
+const NGO = (o) => person({ name: "Ngô Quyền", mood: "firm", tunic: "#b5452a", trim: "#f2c14e", hat: band("#d8322f") + chinBeard, extra: plate("#c9a15a"), ...o });
 const KING_NGO = (o) => person({ name: "Ngô Quyền", tunic: "#c8552a", trim: "#f2c14e", long: 1, hat: band("#f2c14e") + chinBeard, ...o });
-const VIET = (o) => person({ tunic: VIET_C, trim: "#3f6a4a", hat: turban, ...o });
-const HAN = (o) => person({ tunic: HAN_C, trim: "#c8ccd4", hair: "none", hat: ironHelmet(), mood: "angry", ...o });
-const THAO = (o) => person({ tunic: "#3a4fa8", trim: "#f2c14e", hair: "none", hat: ironHelmet("#e0b040", "#f6ead2"), extra: plate("#e0b040"), mood: "angry", ...o });
+const VIET = (o) => person({ mood: "firm", tunic: VIET_C, trim: "#3f6a4a", hat: turban, ...o });
+const HAN = (o) => person({ tunic: HAN_C, trim: "#c8ccd4", hair: "none", hat: ironHelmet(), mood: "firm", ...o });
+const THAO = (o) => person({ tunic: "#3a4fa8", trim: "#f2c14e", hair: "none", hat: ironHelmet("#e0b040", "#f6ead2"), extra: plate("#e0b040"), mood: "firm", ...o });
 const HAN_KING = (o) => person({ tunic: "#1f3f6f", trim: "#f2c14e", long: 1, hair: "none", hat: mian, beard: 1, ...o });
 const DUONG = (o) => person({ tunic: "#a0522a", trim: "#e9d9a6", long: 1, beard: 1, ...o });
 const KIEU = (o) => person({ tunic: "#55603a", trim: "#1c1c28", long: 1, mood: "angry", hat: band("#1c1c28"), ...o });
@@ -165,45 +165,45 @@ const ART = {
     + go(junk(620, 700, 0.95, { crew: sailor(HAN, -110) + sailor(THAO, -10, { aR: [-80, -190], wR: [14, 0.8], nod: [4, 1] }) + sailor(HAN, 80) }), 360, o, 22),
   plan: (o = {}) => river({ top: "#e8a060", bot: "#f8e0a0", water: "#5f8a8f", sun: [1250, 330, "#f6c453"], rock: "#7a6a6a" }) + bank(660, "#8a7a4a")
     + banner(250, 780, 300) + fire(900, 850, 1.1)
-    + NGO({ x: 600, y: 820, s: 1.35, mood: "open", aR: [96, -196], wR: [-14, 0.9], nod: [4, 1.1], aL: [-40, -120] })
+    + NGO({ x: 600, y: 820, s: 1.35, mood: "speak", aR: [96, -196], wR: [-14, 0.9], nod: [4, 1.1], aL: [-40, -120] })
     + VIET({ x: 1090, y: 830, s: 1.2, flip: 1, nod: [7, 1.3], aL: [-20, -140], aR: [20, -140] }) + VIET({ x: 1300, y: 810, s: 1.15, flip: 1, trim: "#b5382a", nod: [6, 1.7, 0.4], lean: [3, 2] }),
   logging: (o = {}) => sky("#a8d8c0", "#f0f0c0") + clouds() + hills("#5f8f5a") + ground(690, "#9a8a50") + tree(160, 720, 0.95) + tree(1480, 730, 0.85) + tree(420, 760, 1.05)
-    + DAN({ x: 590, y: 800, s: 1.15, flip: 1, aR: [70, -176], hR: held(70, -176, 50, AXE), wR: [-46, 0.42], lean: [4, 0.42] })
+    + DAN({ mood: "firm", x: 590, y: 800, s: 1.15, flip: 1, aR: [70, -176], hR: held(70, -176, 50, AXE), wR: [-46, 0.42], lean: [4, 0.42] })
     + log(760, 790, 300) + log(790, 756, 260) + log(730, 850, 330, 1)
     + blaze(1120, 830, 0.7) + `<rect x="1170" y="790" width="90" height="44" rx="6" fill="${IRON}" ${I()}/>`
-    + DAN({ x: 1350, y: 830, s: 1.15, flip: 1, tunic: "#6a5a4a", aR: [72, -180], hR: held(72, -180, 60, MALLET), wR: [-50, 0.36], nod: [5, 0.36] }),
+    + DAN({ mood: "firm", x: 1350, y: 830, s: 1.15, flip: 1, tunic: "#6a5a4a", aR: [72, -180], hR: held(72, -180, 60, MALLET), wR: [-50, 0.36], nod: [5, 0.36] }),
   planting: (o = {}) => river({ top: "#9fd0d8", bot: "#f6e8b8", water: "#4f9aa0" }) + stakes({ at: "end" }, 0, 600)
     + skiff(700, 640, 0.95, sailor(VIET, -80, { aR: [70, -190], hR: held(70, -190, 70, MALLET), wR: [-60, 0.4] }) + sailor(VIET, 60, { aL: [-50, -130], nod: [5, 0.8] }))
     + stakes({ at: "end" }, 600, 700) + stake(1000, 660, 150, o.at ? { at: o.at } : { sink: 0, t: o.t || 6, d: o.d || 0 }) + stakes({ at: "end" }, 700) + bank(850, "#8a7a4a")
     + NGO({ x: 1330, y: 880, s: 0.85, flip: 1, aR: [70, -180], wR: [-12, 1], nod: [4, 1.2] }),
   highTide: (o = {}) => river({ top: "#2a3a5f", bot: "#9a8ab0", water: "#274a66", sun: [1220, 210, "#f4f0d8"], rock: "#2f3f5a" }) + stakes({ sink: 1, t: 6, ...o }) + bank(860, "#3f4a3a"),
   lure: (o = {}) => river(BATTLE) + stakes({ at: "start" })
-    + junk(1460, 500, 0.42) + junk(1130, 590, 0.82, { crew: sailor(HAN, -120) + sailor(THAO, -20, { aR: [-84, -190], wR: [16, 0.5] }) + sailor(HAN, 70) })
+    + junk(1460, 500, 0.42) + junk(1130, 590, 0.82, { crew: sailor(HAN, -120) + sailor(THAO, -20, { mood: "shout", aR: [-84, -190], wR: [16, 0.5] }) + sailor(HAN, 70) })
     + skiff(250, 640, 0.7, archer(-70) + sailor(VIET, 60)) + skiff(430, 770, 1, archer(-70) + archer(60, { trim: "#b5382a" }))
     + arrows(540, 640, 420, -90, 7),
   chase: (o = {}) => river(BATTLE) + stakes({ at: "start" })
     + go(junk(1420, 510, 0.45) + junk(980, 570, 0.7, { crew: sailor(HAN, -60) + sailor(HAN, 50) }), 420, o, 14)
-    + go(junk(1260, 690, 0.95, { crew: sailor(HAN, -120) + sailor(THAO, -20, { aR: [-84, -190], wR: [16, 0.5] }) + sailor(HAN, 70) }), 520, o, 14)
+    + go(junk(1260, 690, 0.95, { crew: sailor(HAN, -120) + sailor(THAO, -20, { mood: "shout", aR: [-84, -190], wR: [16, 0.5] }) + sailor(HAN, 70) }), 520, o, 14)
     + go(skiff(210, 640, 0.7, sailor(VIET, -70) + sailor(VIET, 60), 1) + skiff(380, 790, 0.95, sailor(VIET, -70) + sailor(VIET, 60, { trim: "#b5382a" }), 1), 460, o, 14),
   ebb: (o = {}) => river({ ...BATTLE, water: "#3f8088" }) + stakes(o, 0, 550)
-    + junk(1010, 560, 0.7, { cls: "tremble", crew: sailor(HAN, -60, { mood: "open" }) + sailor(HAN, 50, { mood: "open" }) }) + stakes(o, 550, 700)
-    + junk(1200, 700, 0.9, { cls: "tremble", crew: sailor(HAN, -120, { mood: "open" }) + sailor(THAO, -20, { mood: "open", aL: [-70, -220], aR: [70, -220], wR: [10, 0.3] }) }) + stakes(o, 700)
-    + skiff(300, 800, 1.05, sailor(NGO, -40, { s: 0.62, mood: "open", aR: [80, -230], hR: held(80, -230, 20, SWORD), wR: [-18, 0.5] }) + sailor(VIET, 80)),
+    + junk(1010, 560, 0.7, { cls: "tremble", crew: sailor(HAN, -60, { mood: "fear" }) + sailor(HAN, 50, { mood: "fear" }) }) + stakes(o, 550, 700)
+    + junk(1200, 700, 0.9, { cls: "tremble", crew: sailor(HAN, -120, { mood: "fear" }) + sailor(THAO, -20, { mood: "fear", aL: [-70, -220], aR: [70, -220], wR: [10, 0.3] }) }) + stakes(o, 700)
+    + skiff(300, 800, 1.05, sailor(NGO, -40, { s: 0.62, mood: "shout", aR: [80, -230], hR: held(80, -230, 20, SWORD), wR: [-18, 0.5] }) + sailor(VIET, 80, { mood: "shout" })),
   wreck: (o = {}) => river({ top: "#8f8fa8", bot: "#f0c890", water: "#2f6a70" }) + stakes({ at: "end" }, 0, 550)
     + sinking(junk(1230, 550, 0.7, { burn: 1 }), 1230, 550, o, -12, 60) + stakes({ at: "end" }, 550, 700)
-    + sinking(junk(700, 650, 0.92, { burn: 1, crew: sailor(HAN, -120, { mood: "open", aL: [-70, -220], aR: [70, -220], wL: [10, 0.3] }) }), 700, 650, o, 13, 80)
+    + sinking(junk(700, 650, 0.92, { burn: 1, crew: sailor(HAN, -120, { mood: "fear", aL: [-70, -220], aR: [70, -220], wL: [10, 0.3] }) }), 700, 650, o, 13, 80)
     + splash(520, 690, 1.3) + splash(980, 700, 1.1, 0.5) + splash(1360, 610, 0.9, 0.9) + swimmer(1010, 790) + swimmer(1290, 730, 1) + swimmer(560, 800, 1) + plank(880, 820, 14) + plank(1180, 800, -10)
     + stakes({ at: "end" }, 700) + skiff(240, 800, 0.9, archer(-70) + archer(60, { trim: "#b5382a" })) + arrows(340, 690, 300, -70, 6),
   fall: (o = {}) => river({ top: "#6a6a88", bot: "#e8b080", water: "#2a5a66", rock: "#4a5a6a" }) + stakes({ at: "end" }, 0, 600)
-    + sinking(junk(820, 660, 1.15, { burn: 1, crew: sailor(THAO, -30, { s: 0.62, mood: "sad", aL: [-70, -230], aR: [70, -230], wL: [12, 0.3], wR: [-12, 0.3] }) + sailor(HAN, 90, { mood: "open" }) }), 820, 660, o, 15, 110)
+    + sinking(junk(820, 660, 1.15, { burn: 1, crew: sailor(THAO, -30, { s: 0.62, mood: "fear", aL: [-70, -230], aR: [70, -230], wL: [12, 0.3], wR: [-12, 0.3] }) + sailor(HAN, 90, { mood: "fear" }) }), 820, 660, o, 15, 110)
     + splash(520, 720, 1.4) + splash(1150, 730, 1.3, 0.6) + swimmer(380, 800, 1) + plank(1280, 810, 10) + stakes({ at: "end" }, 600),
   retreat: (o = {}) => sky("#7a8a9a", "#d8c8a8") + clouds("#e8e8e8", 0.5) + islands("#4a5a6a") + sea(420, "#4a6a7a")
     + `<g class="away">${junk(1080, 520, 0.4, { flip: 1 })}${junk(1330, 480, 0.3, { flip: 1 })}</g>` + plank(900, 560, 8) + plank(1060, 600, -12) + bank(690, "#7a7560")
-    + HAN_KING({ x: 620, y: 830, s: 1.35, mood: "sad", nod: [9, 1.8], aR: [26, -214], lean: [3, 2.2] })
+    + HAN_KING({ x: 620, y: 830, s: 1.35, mood: "cry", nod: [9, 1.8], aR: [26, -214], lean: [3, 2.2] })
     + HAN({ x: 330, y: 840, s: 1.1, mood: "sad", nod: [8, 2], aR: [62, -150], hR: held(62, -150, 0, SPEAR) }) + HAN({ x: 900, y: 850, s: 1.1, flip: 1, mood: "sad", nod: [8, 2.3, 0.5] }),
   crown: (o = {}) => sky("#f6c060", "#fdf0c0") + dongson(800, 230, 190, "#fffaf0", 0.55) + clouds("#fffaf0", 0.5, 150) + rampart(560) + ground(650, "#c9a868")
     + banner(300, 640, 300) + banner(1300, 640, 300, "#f2c14e") + drum(470, 850, 1)
-    + VIET({ x: 330, y: 850, s: 1.05, aR: [74, -170], hR: held(74, -170, 60, MALLET), wR: [-40, 0.4], nod: [4, 0.4] })
+    + VIET({ mood: "smile", x: 330, y: 850, s: 1.05, aR: [74, -170], hR: held(74, -170, 60, MALLET), wR: [-40, 0.4], nod: [4, 0.4] })
     + KING_NGO({ x: 800, y: 840, s: 1.4, aL: [-80, -230], aR: [80, -230], wL: [8, 0.8], wR: [-8, 0.8], nod: [3, 1.2] })
     + VIET({ x: 1120, y: 840, s: 1.05, flip: 1, body: "jump", mood: "open", aL: [-60, -230], aR: [60, -230] }) + DAN({ x: 1290, y: 860, s: 1.05, flip: 1, body: "jump", mood: "open", aR: [60, -230], wR: [10, 0.4] }) + VIET({ x: 1450, y: 840, s: 1, flip: 1, trim: "#b5382a", mood: "open", aL: [-60, -230], wL: [10, 0.4], nod: [4, 0.5] }),
 };

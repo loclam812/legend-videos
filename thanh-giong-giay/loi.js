@@ -1,0 +1,22 @@
+// The shot list of the paper-cut cut of Thánh Gióng: one short sentence per shot.
+const SHOTS = [
+  { label: "hook", mood: "wonder", hot: ["tráng sĩ"], lines: [[null, "Cậu bé ba tuổi vươn vai thành tráng sĩ đánh giặc."]] },
+  { label: "1", mood: "calm", hot: ["làng Gióng"], lines: [[null, "Đời Hùng Vương thứ sáu, làng Gióng có hai vợ chồng già chưa có con."]] },
+  { label: "2", mood: "wonder", hot: ["vết chân khổng lồ"], lines: [[null, "Một hôm, bà ra đồng, ướm chân vào một vết chân khổng lồ."]] },
+  { label: "3", mood: "bright", hot: ["con trai"], lines: [[null, "Mười hai tháng sau, bà sinh một cậu con trai."]] },
+  { label: "4", mood: "sad", hot: ["không nói", "không cười"], lines: [[null, "Lên ba tuổi, cậu vẫn không nói, không cười, đặt đâu nằm đấy."]] },
+  { label: "5", mood: "tense", hot: ["giặc Ân"], lines: [[null, "Bấy giờ giặc Ân kéo sang, đi đến đâu đốt phá đến đấy."]] },
+  { label: "6", mood: "tense", hot: ["sứ giả"], lines: [[null, "Vua sai sứ giả đi tìm người tài cứu nước."]] },
+  { label: "7", mood: "wonder", hot: ["Mẹ ơi"], lines: [["Gióng", "Mẹ ơi, mời sứ giả vào đây cho con!"]] },
+  { label: "8", mood: "wonder", hot: ["ngựa sắt", "roi sắt", "áo giáp sắt"], lines: [["Gióng", "Hãy rèn cho ta ngựa sắt, roi sắt và áo giáp sắt."]] },
+  { label: "9", mood: "bright", hot: ["lớn nhanh như thổi"], lines: [[null, "Từ đó cậu lớn nhanh như thổi, cơm ăn mấy cũng không no."]] },
+  { label: "10", mood: "bright", hot: ["góp gạo"], lines: [[null, "Cả làng góp gạo nuôi cậu."]] },
+  { label: "11", mood: "wonder", hot: ["vươn vai"], lines: [[null, "Ngựa sắt vừa đến, cậu vươn vai thành tráng sĩ."]] },
+  { label: "12", mood: "battle", hot: ["phun lửa"], lines: [[null, "Tráng sĩ nhảy lên ngựa, ngựa hí vang, phun lửa."]] },
+  { label: "13", mood: "battle", hot: ["xông thẳng"], lines: [[null, "Người xông thẳng vào giặc, đánh hết lớp này đến lớp khác."]] },
+  { label: "14", mood: "battle", hot: ["nhổ tre"], lines: [[null, "Roi sắt gãy, tráng sĩ nhổ tre bên đường quật giặc."]] },
+  { label: "15", mood: "bright", hot: ["tan vỡ"], lines: [[null, "Giặc tan vỡ, giẫm đạp nhau mà chạy."]] },
+  { label: "16", mood: "wonder", hot: ["bay về trời"], lines: [[null, "Đến núi Sóc, người cởi giáp, cả người lẫn ngựa bay về trời."]] },
+  { label: "17", mood: "calm", hot: ["Phù Đổng Thiên Vương"], lines: [[null, "Vua phong là Phù Đổng Thiên Vương."]] },
+  { label: "kết", mood: "bright", hot: ["Theo dõi"], lines: [[null, "Theo dõi kênh để nghe thêm chuyện xưa nhé!"]] },
+];

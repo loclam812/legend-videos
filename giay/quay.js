@@ -1,6 +1,7 @@
 // Renders a paper-cut story frame by frame (no dropped frames) over xuat/am.m4a, the sound nhac.js writes.
 // Usage: node giay/quay.js <story-folder>          <story-folder>/<story-folder>.mp4
 //        node giay/quay.js <story-folder> sheet    xuat/kiem.jpg: three frames of every shot
+//        node giay/quay.js <story-folder> srt      only <story-folder>/<story-folder>.srt, which every run writes
 const { chromium } = require(process.env.PLAYWRIGHT_PATH);
 const { spawn, execFileSync } = require("child_process");
 const path = require("path");
@@ -14,10 +15,17 @@ const dir = path.join(repo, story);
 const mode = process.argv[3];
 const ff = (args) => execFileSync("ffmpeg", ["-v", "error", "-y", ...args]);
 
-const SHOTS = new Function(fs.readFileSync(path.join(dir, "loi.js"), "utf8") + "\nreturn SHOTS;")();
+const { SHOTS, WIDE, SUBS } = new Function(fs.readFileSync(path.join(dir, "loi.js"), "utf8") + "\nreturn { SHOTS, WIDE: typeof WIDE !== \"undefined\" && WIDE, SUBS: typeof SUBS === \"undefined\" || SUBS };")();
 const durs = JSON.parse(fs.readFileSync(path.join(dir, "xuat", "durs.json"), "utf8"));
 const cut = SHOTS.map((s, i) => ({ label: s.label, hot: s.hot || [], lines: s.lines.map(([, text], j) => ({ text, dur: durs[i][j] / 1000 })) }));
-fs.writeFileSync(path.join(dir, "xuat", "cut.js"), `window.CUT = ${JSON.stringify(cut)};\n`);
+fs.writeFileSync(path.join(dir, "xuat", "cut.js"), `window.WIDE = ${!!WIDE};\nwindow.SUBS = ${!!SUBS};\nwindow.CUT = ${JSON.stringify(cut)};\n`);
+
+// the subtitle timeline, one cue per sentence, for an editor such as CapCut; the gap and pad match may.js and doc.js
+const stamp = (s) => new Date(Math.round(s * 1000)).toISOString().slice(11, 23).replace(".", ",");
+let at = 0;
+const cues = cut.flatMap((shot) => { const made = shot.lines.map((line) => { const from = at; at += line.dur; return `${stamp(from)} --> ${stamp(at - 0.3)}\n${line.text}`; }); at += 0.5; return made; });
+fs.writeFileSync(path.join(dir, `${story}.srt`), cues.map((cue, i) => `${i + 1}\n${cue}\n`).join("\n"));
+if (mode === "srt") process.exit(0);
 
 (async () => {
   const server = spawn("python3", ["-m", "http.server", String(PORT), "--bind", "127.0.0.1"], { cwd: repo, stdio: "ignore" });
@@ -26,7 +34,7 @@ fs.writeFileSync(path.join(dir, "xuat", "cut.js"), `window.CUT = ${JSON.stringif
     await new Promise((done) => setTimeout(done, 800));
     // CHROME (from .env) points at another installed build when this Playwright's own one is missing
     browser = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
-    const page = await browser.newPage({ viewport: { width: 540, height: 960 }, deviceScaleFactor: 2 });
+    const page = await browser.newPage({ viewport: WIDE ? { width: 960, height: 540 } : { width: 540, height: 960 }, deviceScaleFactor: 2 });
     page.on("pageerror", (e) => console.log("pageerror", e.message));
     await page.goto(`http://127.0.0.1:${PORT}/giay/trang.html?truyen=${story}`);
     await page.waitForFunction("window.ready === true || window.failed", null, { timeout: 60000 });
@@ -45,7 +53,7 @@ fs.writeFileSync(path.join(dir, "xuat", "cut.js"), `window.CUT = ${JSON.stringif
       let n = 0;
       for (const [, t0, len] of starts) for (const k of [0.25, 0.6, 0.95]) await shot(t0 + (len - 0.5) * k, name(n++));
       const out = path.join(dir, "xuat", "kiem.jpg");
-      ff(["-framerate", "1", "-i", path.join(frames, "%04d.jpg"), "-vf", `scale=216:384,tile=12x${Math.ceil(n / 12)}`, "-frames:v", "1", out]);
+      ff(["-framerate", "1", "-i", path.join(frames, "%04d.jpg"), "-vf", WIDE ? `scale=384:216,tile=6x${Math.ceil(n / 6)}` : `scale=216:384,tile=12x${Math.ceil(n / 12)}`, "-frames:v", "1", out]);
       console.log(out);
     } else {
       const total = await page.evaluate("window.TOTAL");

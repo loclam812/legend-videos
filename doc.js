@@ -11,9 +11,8 @@ const root = path.resolve(process.argv[2]);
 const out = path.join(root, "xuat", "tieng");
 const keep = path.join(root, "xuat", "giong-luu");
 const tts = path.join(__dirname, ".venv", "bin", "edge-tts");
-// an SVG story has the first four files; a paper-cut story (see giay/) has only loi.js, which declares SHOTS itself
-const src = ["helpers.js", "people.js", "shots-a.js", "shots-b.js", "loi.js"].map((f) => path.join(root, f)).filter(fs.existsSync).map((f) => fs.readFileSync(f, "utf8")).join("\n");
-const SHOTS = new Function(src + "\nreturn SHOTS;")();
+// loi.js declares SHOTS and may declare TEMPO, how much faster than the voice's own pace the story is read (1.1 = 10 % faster)
+const { SHOTS, TEMPO } = new Function(fs.readFileSync(path.join(root, "loi.js"), "utf8") + "\nreturn { SHOTS, TEMPO: typeof TEMPO === \"undefined\" ? 1 : TEMPO };")();
 const PAD = 0.3;
 const NU = "vi-VN-HoaiMyNeural";
 const NAM = "vi-VN-NamMinhNeural";
@@ -61,7 +60,8 @@ function speak(who, text, file) {
     console.log(`refused ${path.basename(file)} (attempt ${attempt})`);
     execFileSync("sleep", ["45"]);
   }
-  fs.copyFileSync(saved, file);
+  // sped up here, not at the voice service: the saved recording stays reusable and a change of pace needs no network
+  if (TEMPO === 1) fs.copyFileSync(saved, file); else ff(["-i", saved, "-af", `atempo=${TEMPO}`, file]);
 }
 
 fs.rmSync(out, { recursive: true, force: true });

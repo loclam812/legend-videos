@@ -1,0 +1,22 @@
+// The shot list of the paper-cut cut of Sơn Tinh Thủy Tinh: one short sentence per shot.
+const SHOTS = [
+  { label: "hook", mood: "wonder", hot: ["mùa lũ"], lines: [[null, "Vì sao năm nào nước ta cũng có mùa lũ?"]] },
+  { label: "1", mood: "calm", hot: ["Mị Nương"], lines: [[null, "Vua Hùng thứ mười tám có nàng công chúa Mị Nương xinh đẹp."]] },
+  { label: "2", mood: "bright", hot: ["cầu hôn"], lines: [[null, "Một hôm, có hai chàng trai cùng đến cầu hôn."]] },
+  { label: "3", mood: "wonder", hot: ["Sơn Tinh"], lines: [[null, "Sơn Tinh, chúa vùng non cao, vẫy tay là núi đồi mọc lên."]] },
+  { label: "4", mood: "tense", hot: ["Thủy Tinh"], lines: [[null, "Thủy Tinh, chúa vùng nước thẳm, hô mưa gọi gió."]] },
+  { label: "5", mood: "calm", hot: ["chọn ai"], lines: [[null, "Hai chàng đều tài giỏi, vua không biết chọn ai."]] },
+  { label: "6", mood: "calm", hot: ["đến trước"], lines: [["Vua Hùng", "Ngày mai, ai mang sính lễ đến trước, ta gả con gái cho."]] },
+  { label: "7", mood: "wonder", hot: ["chín ngà", "chín cựa", "chín hồng mao"], lines: [[null, "Voi chín ngà, gà chín cựa, ngựa chín hồng mao."]] },
+  { label: "8", mood: "bright", hot: ["đủ lễ vật"], lines: [[null, "Trời vừa sáng, Sơn Tinh đã mang đủ lễ vật đến."]] },
+  { label: "9", mood: "bright", hot: ["về núi"], lines: [[null, "Chàng rước Mị Nương về núi."]] },
+  { label: "10", mood: "tense", hot: ["nổi giận"], lines: [[null, "Thủy Tinh đến sau, đùng đùng nổi giận."]] },
+  { label: "11", mood: "battle", hot: ["dâng nước"], lines: [["Thủy Tinh", "Ta sẽ dâng nước đánh Sơn Tinh!"]] },
+  { label: "12", mood: "battle", hot: ["nước ngập"], lines: [[null, "Mưa bão nổi lên, nước ngập ruộng đồng, nhà cửa."]] },
+  { label: "13", mood: "battle", hot: ["nâng núi"], lines: [["Sơn Tinh", "Nước dâng cao bao nhiêu, ta nâng núi cao bấy nhiêu!"]] },
+  { label: "14", mood: "battle", hot: ["rút quân"], lines: [[null, "Đánh nhau ròng rã mấy tháng, Thủy Tinh kiệt sức, đành rút quân."]] },
+  { label: "15", mood: "tense", hot: ["trả thù"], lines: [[null, "Nhưng năm nào Thủy Tinh cũng dâng nước trả thù."]] },
+  { label: "16", mood: "bright", hot: ["cũng thua"], lines: [[null, "Và năm nào cũng thua."]] },
+  { label: "17", mood: "calm", hot: ["đắp đê giữ làng"], lines: [[null, "Đó là cách người xưa kể về mùa lũ, và niềm tin đắp đê giữ làng."]] },
+  { label: "kết", mood: "bright", hot: ["Theo dõi"], lines: [[null, "Theo dõi kênh để nghe thêm chuyện xưa nhé!"]] },
+];

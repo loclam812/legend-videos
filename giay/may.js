@@ -1,9 +1,11 @@
 // The paper-cut engine. A story's canh.js lists its paper layers and scenes and calls start().
 // Every moving thing is its own layer, and everything drawn is a function of time, so quay.js can step frame by frame.
 // xuat/cut.js (written by quay.js) is the story's shot list with the measured length of every line.
-const OW = 1080, OH = 1920, GAP = 0.5;
+// a story whose loi.js sets `const WIDE = true` is drawn 1920x1080 instead of 1080x1920
+const WIDE = !!window.WIDE, OW = WIDE ? 1920 : 1080, OH = WIDE ? 1080 : 1920, GAP = 0.5;
 const STORY = new URLSearchParams(location.search).get("truyen");
-const out = document.getElementById("out").getContext("2d");
+const out = Object.assign(document.getElementById("out"), { width: OW, height: OH }).getContext("2d");
+if (WIDE) document.body.classList.add("wide");
 const L = {};
 
 const sm = (a, b, t) => { const x = Math.min(1, Math.max(0, (t - a) / (b - a))); return x * x * (3 - 2 * x); };
@@ -142,6 +144,47 @@ function sparkles(x, y, spread, t, n = 12) {
     out.restore();
   }
 }
+// outer space drawn by code: the generator paints a sheet of paper with a border instead of a starry sky
+function space(t) {
+  out.fillStyle = "#0a0f2c"; out.fillRect(0, 0, OW, OH);
+  for (let i = 0; i < 140; i++) {
+    const r = 2 + 5 * rnd(i, 72) * (0.6 + 0.4 * Math.sin(t * (1 + 2 * rnd(i, 73)) + i));
+    out.fillStyle = i % 5 ? "#fbf3df" : "#f6c453";
+    out.beginPath(); out.arc(rnd(i, 70) * OW, rnd(i, 71) * OH, r, 0, 7); out.fill();
+  }
+}
+// a paper globe seen from above (lon0, lat0), radius r. lands and ice are lists of [[lon, lat], ...] outlines; the
+// shapes a story passes are hand-sketched from memory of palaeomaps: an illustration, not a reconstruction
+function globe(x, y, r, { lands, ice = [] }, lon0, lat0 = 0) {
+  const rad = Math.PI / 180, s0 = Math.sin(lat0 * rad), c0 = Math.cos(lat0 * rad);
+  const spot = ([lon, lat]) => {
+    const d = (lon - lon0) * rad, sl = Math.sin(lat * rad), cl = Math.cos(lat * rad);
+    let px = cl * Math.sin(d), py = c0 * sl - s0 * cl * Math.cos(d);
+    // a point on the far side is pushed to the rim, which keeps a half-visible outline closed
+    if (s0 * sl + c0 * cl * Math.cos(d) < 0) { const n = Math.hypot(px, py) || 1; px /= n; py /= n; }
+    return [x + r * px, y - r * py];
+  };
+  // between two outline points, the short way round the globe
+  const mix = (from, to, k) => [from[0] + ((((to[0] - from[0] + 540) % 360) - 180) * k), from[1] + (to[1] - from[1]) * k];
+  // corner cutting, twice: the hand-sketched outlines are coarse polygons
+  const round = (pts) => pts.flatMap((p, i) => { const q = pts[(i + 1) % pts.length]; return [mix(p, q, 0.25), mix(p, q, 0.75)]; });
+  const shape = (outline, fill) => {
+    out.beginPath();
+    round(round(outline)).forEach((from, i, all) => { const to = all[(i + 1) % all.length]; for (let k = 0; k < 4; k++) out.lineTo(...spot(mix(from, to, k / 4))); });
+    out.closePath(); out.fillStyle = fill; out.fill(); out.lineWidth = 4; out.strokeStyle = "#2a1608"; out.stroke();
+  };
+  out.save();
+  out.shadowColor = "rgba(0,0,0,.5)"; out.shadowBlur = 30; out.shadowOffsetY = 14;
+  out.beginPath(); out.arc(x, y, r, 0, 7); out.fillStyle = "#2f6fb0"; out.fill();
+  out.shadowColor = "transparent"; out.clip();
+  lands.forEach((land, i) => shape(land, i % 2 ? "#7fae5c" : "#9a8a52"));
+  ice.forEach((cap) => shape(cap, "#f4f1e6"));
+  const shade = out.createRadialGradient(x - r * 0.4, y - r * 0.4, r * 0.2, x, y, r);
+  shade.addColorStop(0, "rgba(255,255,255,.12)"); shade.addColorStop(1, "rgba(10,15,44,.45)");
+  out.fillStyle = shade; out.fillRect(x - r, y - r, r * 2, r * 2);
+  out.restore();
+  out.beginPath(); out.arc(x, y, r, 0, 7); out.lineWidth = 7; out.strokeStyle = "#2a1608"; out.stroke();
+}
 const ground = (color, top) => { out.fillStyle = color; out.fillRect(0, top, OW, OH - top); };
 const night = (color = "#7f8fc4") => { out.save(); out.globalCompositeOperation = "multiply"; out.fillStyle = color; out.fillRect(0, 0, OW, OH); out.restore(); };
 const jolt = (k) => out.translate(k * Math.sin(k * 9.1) * 1.2, k * Math.cos(k * 7.3) * 1.2);
@@ -166,8 +209,9 @@ function capHtml(part, hot) {
   return part.split(/\s+/).map((word) => `<span${marked.has(bare(word)) ? ' class="hot"' : ""}>${word.replace(/[.,;:]+$/, "")}</span>`).join(" ");
 }
 
-// plates: full-frame backdrops (jpg). cuts: keyed layers (png). scenes: [{ shots: [labels], draw(ts, i, u) }], where
-// ts = seconds since the scene began, i = which of its shots is playing, u = seconds into that shot.
+// plates: full-frame backdrops (jpg). cuts: keyed layers (png). scenes: [{ shots: [labels], draw(ts, i, u, line, v) }], where
+// ts = seconds since the scene began, i = which of its shots is playing, u = seconds into that shot,
+// line = which sentence of the shot is being read, v = seconds into that sentence.
 // card: [small line, big line, number] shown over the shot labelled "kết".
 function start({ plates, cuts, scenes, card }) {
   const capBox = document.getElementById("cap"), cardBox = document.getElementById("card");
@@ -176,15 +220,16 @@ function start({ plates, cuts, scenes, card }) {
   const SHOTS = window.CUT.map((cut) => {
     const scene = scenes.find((s) => s.shots.includes(cut.label));
     if (!scene) throw new Error(`no scene draws shot "${cut.label}"`);
-    const caps = [];
+    const caps = [], lineAt = [];
     let from = 0;
     for (const line of cut.lines) {
-      const parts = chunks(line.text, cut.hot), letters = parts.reduce((sum, p) => sum + p.length, 0);
+      lineAt.push(from);
+      const parts = chunks(line.text, cut.hot, WIDE ? 38 : 16), letters = parts.reduce((sum, p) => sum + p.length, 0);
       let part0 = from;
       for (const p of parts) { caps.push([part0, capHtml(p, cut.hot)]); part0 += (line.dur * p.length) / letters; }
       from += line.dur;
     }
-    const shot = { label: cut.label, t0: at, dur: from, len: from + GAP, scene, i: scene.shots.indexOf(cut.label), caps };
+    const shot = { label: cut.label, t0: at, dur: from, len: from + GAP, scene, i: scene.shots.indexOf(cut.label), caps, lineAt };
     if (shot.i === 0) scene.t0 = at;
     at += shot.len;
     return shot;
@@ -200,7 +245,8 @@ function start({ plates, cuts, scenes, card }) {
     if (n < 0) n = SHOTS.length - 1;
     const shot = SHOTS[n], u = Math.min(t - shot.t0, shot.len);
     out.fillStyle = "#1a0d06"; out.fillRect(0, 0, OW, OH);
-    shot.scene.draw(shot.t0 + u - shot.scene.t0, shot.i, u);
+    const line = shot.lineAt.findLastIndex((from) => u >= from);
+    shot.scene.draw(shot.t0 + u - shot.scene.t0, shot.i, u, line, u - shot.lineAt[line]);
 
     // a sheet of paper slides across whenever the scene changes
     const edge = SHOTS.find((s) => s.i === 0 && s.t0 > 0 && Math.abs(t - s.t0) < 0.22);
@@ -217,7 +263,8 @@ function start({ plates, cuts, scenes, card }) {
 
     let cap = "";
     for (const [from, html] of shot.caps) if (u >= from && u < shot.dur) cap = html;
-    capBox.innerHTML = cap;
+    // a story whose loi.js sets `const SUBS = false` burns in no subtitles: it is also published in other languages
+    capBox.innerHTML = window.SUBS === false ? "" : cap;
     cardBox.style.display = shot.label === "kết" ? "block" : "none";
   };
 

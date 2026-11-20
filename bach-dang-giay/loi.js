@@ -1,4 +1,4 @@
-// The shot list of the paper-cut cut of Bạch Đằng 938: the same words as bach-dang-shorts.
+// The shot list of the paper-cut cut of Bạch Đằng 938: one short sentence per shot.
 // label, mood (which layers of music play), caption words to colour, and the words.
 const SHOTS = [
   { label: "hook", mood: "battle", hot: ["đánh tan"], lines: [[null, "Một dòng sông đã đánh tan cả đoàn thuyền chiến."]] },

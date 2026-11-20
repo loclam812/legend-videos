@@ -1,0 +1,22 @@
+// The shot list of the paper-cut cut of Mai An Tiêm (the watermelon legend): one short sentence per shot.
+const SHOTS = [
+  { label: "hook", mood: "wonder", hot: ["hoang đảo"], lines: [[null, "Quả dưa hấu ngày Tết đến từ một hoang đảo."]] },
+  { label: "1", mood: "calm", hot: ["Mai An Tiêm"], lines: [[null, "Đời vua Hùng, có chàng Mai An Tiêm là con nuôi của vua."]] },
+  { label: "2", mood: "bright", hot: ["kho đầy"], lines: [[null, "Chàng giỏi giang, được vua ban nhà cao, kho đầy."]] },
+  { label: "3", mood: "calm", hot: ["của nợ"], lines: [["An Tiêm", "Của biếu là của lo, của cho là của nợ."]] },
+  { label: "4", mood: "tense", hot: ["nổi giận"], lines: [[null, "Lời ấy đến tai vua, vua nổi giận."]] },
+  { label: "5", mood: "sad", hot: ["hoang đảo"], lines: [[null, "Cả nhà An Tiêm bị đày ra hoang đảo giữa biển."]] },
+  { label: "6", mood: "sad", hot: ["chết ở đây"], lines: [[null, "Vợ chàng bật khóc: chúng ta sẽ chết ở đây mất thôi."]] },
+  { label: "7", mood: "calm", hot: ["hai bàn tay"], lines: [["An Tiêm", "Còn hai bàn tay, ta còn sống được."]] },
+  { label: "8", mood: "wonder", hot: ["hạt đen nhánh"], lines: [[null, "Một hôm, đàn chim lạ bay tới, để lại những hạt đen nhánh."]] },
+  { label: "9", mood: "calm", hot: ["người cũng ăn được"], lines: [[null, "An Tiêm nghĩ: chim ăn được thì người cũng ăn được."]] },
+  { label: "10", mood: "calm", hot: ["tưới nước"], lines: [[null, "Chàng vùi hạt xuống cát, ngày ngày tưới nước."]] },
+  { label: "11", mood: "bright", hot: ["quả tròn"], lines: [[null, "Dây leo bò kín bãi, kết thành những quả tròn xanh thẫm."]] },
+  { label: "12", mood: "bright", hot: ["ruột đỏ tươi"], lines: [[null, "Bổ ra: ruột đỏ tươi, ngọt và mát lạnh."]] },
+  { label: "13", mood: "wonder", hot: ["khắc dấu"], lines: [[null, "Chàng khắc dấu lên vỏ dưa rồi thả xuống biển."]] },
+  { label: "14", mood: "bright", hot: ["đổi gạo"], lines: [[null, "Thuyền buôn vớt được, tìm ra đảo đổi gạo lấy dưa."]] },
+  { label: "15", mood: "wonder", hot: ["còn sống"], lines: [[null, "Vua Hùng nhìn dấu khắc, biết con mình còn sống."]] },
+  { label: "16", mood: "bright", hot: ["trở về"], lines: [[null, "Vua cho thuyền ra đón cả nhà trở về."]] },
+  { label: "17", mood: "calm", hot: ["dưa hấu"], lines: [[null, "Từ đó, nước ta có dưa hấu."]] },
+  { label: "kết", mood: "bright", hot: ["Theo dõi"], lines: [[null, "Theo dõi kênh để nghe thêm chuyện xưa nhé!"]] },
+];

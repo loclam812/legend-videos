@@ -63,6 +63,13 @@ node giay/quay.js <story-folder> sheet   # xuat/kiem.jpg: three frames of every 
 node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and .srt (subtitle timeline)
 ```
 
+- `node giay/capcut.js <story-folder>` (CapCut closed) writes a CapCut draft named after the story into
+  `~/Movies/CapCut/User Data/Projects/com.lveditor.draft/`: the mp4 muted, `xuat/loi-ke.wav`,
+  `xuat/nhac.wav` and the `.srt` cues on four tracks, so another language needs no new recording. It
+  points at the files in the story folder and copies nothing. An existing draft is replaced only with
+  `force`. The draft format is unpublished: `giay/capcut-mau.json` is an empty draft from CapCut 9.8.0
+  for macOS, and a later CapCut may refuse it. The voice plays at full level and the music at half, without the
+  ducking and loudness pass of `am.m4a`.
 - Generation uses `mflux` with FLUX.2 klein 4B (Apache 2.0, so the output may be monetised). The
   tool and the 15 GB model live outside the repo in `~/ai-models/`. A layer takes 20 to 40 s on an
   idle machine and minutes on a busy one, and the machine is slow meanwhile.

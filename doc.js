@@ -1,6 +1,7 @@
 // Reads every narration line into <project>/xuat/tieng/ and writes line timings.
-// Usage: node doc.js <project-folder> [say]   Default is the free Microsoft neural voices through edge-tts, which need the network
-// and sometimes refuse a request; "say" uses the built-in macOS voice instead, which never fails but is one voice for everyone.
+// Usage: node doc.js <project-folder> [nam] [say]   Default is the free Microsoft neural voices through edge-tts, which need the network
+// and sometimes refuse a request; "nam" makes Nam Minh the narrator and the voice of anyone unlisted instead of Hoài My;
+// "say" uses the built-in macOS voice instead, which never fails but is one voice for everyone (so "nam" means nothing with it).
 // A line written as [who, "", milliseconds] is a silent pause of that length (title cards).
 const fs = require("fs");
 const path = require("path");
@@ -19,6 +20,7 @@ const NAM = "vi-VN-NamMinhNeural";
 // [voice, pitch]: the narrator and anyone not listed use the first entry
 const VOICES = {
   "": [NU, ""],
+  "Kể": [NAM, "-6Hz"],
   "An Tiêm": [NAM, ""],
   "Vua Hùng": [NAM, "-12Hz"],
   "Nàng Ba": [NU, "+12Hz"],
@@ -33,7 +35,10 @@ const VOICES = {
   "Chim": [NAM, "+25Hz"],
 };
 
-const useSay = process.argv[3] === "say";
+const args = process.argv.slice(3);
+const useSay = args.includes("say");
+// "nam" swaps the default voice; the giong-luu cache keys on voice and wording, so the two narrators never reuse each other's audio
+if (args.includes("nam") && !useSay) VOICES[""] = [NAM, ""];
 const ff = (args) => execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...args]);
 
 function speakSay(text, file) {

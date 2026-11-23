@@ -1,7 +1,7 @@
 # Legend videos
 
 Animated Vietnamese folk tales and, since 2026-11-20, short science stories about the Earth's past, for YouTube. Every export uses free tools only: no paid image,
-video or voice service. Every story is a `*-giay/` folder, a paper-cut story: its picture is built from images a local model
+video or voice service. Every story folder ends in `-giay` (paper-cut) or `-hoathinh` (cartoon): its picture is built from images a local model
 generates (see "Paper-cut stories").
 
 The older stories drew every frame as SVG by code. That engine and its stories (`mai-an-tiem-video/`,
@@ -15,6 +15,14 @@ commit messages are English.
 
 The look of every story (the user chose it on 2026-11-19): every moving
 thing is a separate paper layer that a local model generates, and code moves the layers.
+Since 2026-11-20 there is a second look: a folder ending in `-hoathinh` is the flat 2D
+stick-figure story-time cartoon the user chose (people are người que whose clothes follow
+the story). Its `anh.js` sets `module.exports.style` to the stick-figure string (see
+`100-nghin-nam-hoathinh/anh.js`) and its `canh.js` passes `look: "toon"` to `start`, which
+drops the paper drop shadows, grain and vignette and draws flat caption cards. In the toon
+look `cutOut` in `giay/may.js` also eats the grey contact shadow the model paints under
+every `pg-` puppet (grey reachable from empty space below; outlines and coloured fills stop
+it), because no prompt ever removed it.
 
 | Folder | Story | Output |
 |---|---|---|
@@ -25,6 +33,8 @@ thing is a separate paper layer that a local model generates, and code moves the
 | `thanh-giong-giay/` | Thánh Gióng, 19 shots | `thanh-giong-giay.mp4` |
 | `thien-thach-giay/` | Ten minutes after the asteroid that killed the dinosaurs, 19 shots | `thien-thach-giay.mp4` |
 | `300-trieu-nam-giay/` | If you woke up 300 million years ago: wide, 47 shots, about 9 minutes | `300-trieu-nam-giay.mp4` |
+| `100-nghin-nam-giay/` | How long would you survive 100,000 years ago?, 20 shots | `100-nghin-nam-giay.mp4` |
+| `100-nghin-nam-hoathinh/` | The same story in the cartoon look (người que), 20 shots | `100-nghin-nam-hoathinh.mp4` |
 
 The stories share some layers (skies, sea, ground, hut, King Hùng): the png or jpg is copied into each
 story's `anh/` and its prompt repeated in `anh.js`, so every folder still builds on its own.
@@ -58,7 +68,7 @@ Build a story from the repo root, in this order:
 set -a; . ./.env; set +a
 node giay/sinh.js <story-folder> all     # the layers that are missing; <name>:<seed> redoes one
 node doc.js <story-folder>               # narration into xuat/tieng and xuat/durs.json
-node giay/nhac.js <story-folder>         # xuat/am.m4a: narration over the music
+node giay/nhac.js <story-folder> [off]   # xuat/am.m4a: narration over the music, or narration only with "off"
 node giay/quay.js <story-folder> sheet   # xuat/kiem.jpg: three frames of every shot. Look at it.
 node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and .srt (subtitle timeline)
 ```
@@ -101,6 +111,23 @@ node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and
 
 The earlier SVG cuts of Bạch Đằng (wide and vertical) and a 3D-film-style still cut (`bach-dang-ai/`) were
 removed on 2026-11-20; they are in git history up to `f77217d`.
+
+## The staged commands
+
+Four slash commands wrap that order with a review pause between stages. `content.json`
+at the repo root (gitignored) carries the script, the settings and the status between
+them: `/kichban <tệp kịch bản|nội dung> <voice-over> [nu|nam|linh] [speed=] [music=]
+[style=] [format=] [len=] [folder=]` writes it (the script verbatim); `/chuanbi` analyses the script, writes the
+folder's `loi.js`/`anh.js`/`canh.js` plus `VOICES` entries in `doc.js` for new speakers
+and estimated `durs.json`, then — after asking — generates the layers (rerunning it
+resumes; `sinh.js all` only makes missing files); `/soatanh` checks every layer with
+`node giay/soat.js <folder>` and with its own eyes, fixes the `LEFT` facings, writes the
+per-image status and offers `sinh.js <name>:<seed>` for the bad ones; `/quay` records
+voice → music → `kiem.jpg` sheet, saves `status.pausedAt = "sheet"` and WAITS — `/quay
+tiep` resumes straight at the recording if voice, music and sheet are still fresh. It
+refuses when an image's mtime no longer matches its checked status. `soat.js` checks the
+cheap facts (file, size, mtime): exit 0 all pass, 1 something off, 2 `anh.js` broken.
+`node doc.js <folder> nam` makes Nam Minh the narrator instead of Hoài My.
 
 ## Setup
 

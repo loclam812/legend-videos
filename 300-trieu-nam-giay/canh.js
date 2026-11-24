@@ -98,7 +98,7 @@ const SCENES = [
     globe(960, 540, 360, EARTH, -15 + (i === 2 ? 30 * u : 8 * Math.sin(ts * 0.3)), -12);
     sparkles(960, 300, 900, ts, 10);
     if (i === 0) tag("PANGAEA", 1380, 420, -0.02, on(2, line, v), 80);
-    if (i === 1) { ring(900, 470, 110, on(0, line, v, 0.6)); tag("XÍCH ĐẠO: NÓNG ẨM", 1300, 400, -0.02, on(0, line, v, 0.8), 46); tag("PHÍA NAM: BĂNG PHỦ", 1300, 780, 0.02, on(1, line, v), 46); }
+    if (i === 1) { ring(900, 470, 110, on(0, line, v, 0.6)); tag("XÍCH ĐẠO: NÓNG ẨM", 1300, 400, -0.02, on(0, line, v, 0.8), 46); tag("CỰC NAM: CÓ BĂNG", 1300, 780, 0.02, on(1, line, v), 46); }
     if (i === 2) { tag("1 NGÀY < 23 GIỜ", 130, 380, -0.02, on(0, line, v), 56); tag("1 NĂM ≈ 390 NGÀY", 130, 560, 0.02, on(2, line, v), 56); }
   } },
   { shots: ["b7", "b8"], draw(ts, i, u, line, v) {
@@ -149,14 +149,14 @@ const SCENES = [
     crawl("pg-arthro", "arthro", x, 905, 900, ts, 1);
     front(ts);
     if (i === 0) { tag("ARTHROPLEURA", 900, 240, -0.02, on(2, line, v), 70); tag("DÀI HƠN 2 M", 980, 390, 0.02, on(1, line, v), 50); }
-    if (i === 1) tag("CHỈ ĂN THỰC VẬT MỤC", 760, 260, -0.02, on(0, line, v), 52);
+    if (i === 1) tag("CÓ LẼ ĂN THỰC VẬT", 760, 260, -0.02, on(0, line, v), 52);
   } },
   { shots: ["k9", "k10", "k11"], draw(ts, i, u, line, v) {
     back("pl-troi", ts, 36);
     [[160, 380], [520, 300], [1420, 320], [1780, 400]].forEach(([x, w], n) => P("pc-vay", x, 1900, w, { rot: 0.01 * Math.sin(ts + n) }));
     if (i < 2) for (let n = 0; n < 3; n++) { const a = ts * (0.7 + n * 0.15) + n * 2.1; mega(960 + (520 - n * 90) * Math.cos(a), 470 + (200 - n * 30) * Math.sin(a), 420 - n * 90, ts, Math.sin(a) > 0, n); }
     if (i === 0) { tag("MEGANEURA", 720, 160, -0.02, on(0, line, v), 70); tag("SẢI CÁNH 70 CM", 760, 760, 0.02, on(1, line, v), 50); }
-    if (i === 1) [["KHÔNG CÓ PHỔI", 150, 240, 1], ["NHIỀU Ô XY → TO HƠN", 1080, 240, 2], ["CHƯA CÓ CHIM, DƠI", 620, 720, 3]].forEach(([text, x, y, n], j) => tag(text, x, y, j % 2 ? 0.02 : -0.02, on(n, line, v), 46));
+    if (i === 1) [["KHÔNG CÓ PHỔI", 150, 240, 1], ["NHIỀU Ô XY → TO HƠN?", 1080, 240, 2], ["CHƯA CÓ CHIM, DƠI", 620, 720, 3]].forEach(([text, x, y, n], j) => tag(text, x, y, j % 2 ? 0.02 : -0.02, on(n, line, v), 46));
     if (i === 2) {
       ground("#3a2a1c", 700); P("pc-bui", 960, 730, 2100); P("pc-dat", 960, 1010, 2300);
       for (let n = 0; n < 5; n++) P("pg-gian", (300 + n * 420 + 130 * ts * (n % 2 ? 1 : -1) + 4000) % 2200 - 100, 860 + (n % 3) * 50, 150, { rot: (n % 2 ? 1 : -1) * 1.57 + 0.1 * Math.sin(ts * 12 + n) });
@@ -196,7 +196,7 @@ const SCENES = [
     swim("pg-ca-map", "caMap", 2500 - 300 * ts, 560, 1000, ts, 1);
     for (let n = 0; n < 8; n++) { const k = (ts * 0.3 + n * 0.13) % 1; out.save(); out.globalAlpha = 0.7 * (1 - k); out.strokeStyle = "#dff3f5"; out.lineWidth = 4; out.beginPath(); out.arc(200 + n * 230, 1000 - 900 * k, 8 + 10 * rnd(n, 3), 0, 7); out.stroke(); out.restore(); }
     tag("CÁ MẬP NƯỚC NGỌT", 150, 180, -0.02, on(0, line, v), 60);
-    tag("DÀI 3 M", 200, 330, 0.02, on(0, line, v, 1.6), 60);
+    tag("DÀI TỚI ~3 M", 200, 330, 0.02, on(0, line, v, 1.6), 60);
     tag("GAI SAU ĐẦU", 1300, 740, 0.02, on(1, line, v), 46);
   } },
   { shots: ["n4", "n5", "n6"], draw(ts, i, u, line, v) {
@@ -207,7 +207,7 @@ const SCENES = [
       crawl("pg-san-moi", "sanMoi", x, 905, 700, ts, 1);
       you(line >= 2 ? "pg-ban-so" : "pg-ban", 760, ts);
       tag("BÒ SÁT ĐẦU TIÊN", 160, 300, -0.02, on(0, line, v), 54);
-      tag("DÀI BẰNG MỘT NGƯỜI", 1000, 300, 0.02, on(2, line, v, 2), 50);
+      tag("SĂN CÔN TRÙNG", 1000, 300, 0.02, on(2, line, v, 2), 50);
     }
     if (i === 1) {
       crawl("pg-bo-sat", "boSat", 420, 900, 380, ts);
@@ -332,7 +332,7 @@ const SCENES = [
     P("pg-ban", 1620, FEET, 170 * on(2, line, v, 2));
     if (k) { out.save(); out.globalAlpha = Math.min(1, k); out.strokeStyle = "#f6c453"; out.lineWidth = 10; out.setLineDash([22, 16]); out.beginPath(); out.moveTo(1320, 780); out.lineTo(1500, 780); out.stroke(); out.restore(); }
     tag("THAN ĐÁ → CÁCH MẠNG CÔNG NGHIỆP", 150, 180, -0.02, on(1, line, v), 44);
-    tag("BÒ SÁT NHỎ → LOÀI NGƯỜI", 1060, 320, 0.02, on(2, line, v, 2), 44);
+    tag("TỔ TIÊN NHỎ → LOÀI NGƯỜI", 1060, 320, 0.02, on(2, line, v, 2), 44);
   } },
   { shots: ["kết"], draw(ts) {
     forest(ts, 12);

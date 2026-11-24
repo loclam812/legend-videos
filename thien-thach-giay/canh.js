@@ -67,7 +67,7 @@ const SCENES = [
     P("pc-thien-thach", 900 - 300 * near, 700 + 420 * near, 420 + 160 * near, { rot: 0.03 * Math.sin(ts * 3), shadow: 0 });
     sparkles(1000 - 300 * near, 380 + 420 * near, 120, ts, 6);
     if (i === 0) { tag("66 TRIỆU NĂM TRƯỚC", 80, 300, -0.03, pop(0.4, u), 50); tag("RỘNG ~10 KM", 420, 440, 0.03, pop(2, u), 50); }
-    if (i === 1) tag("20 KM / GIÂY", 250, 300, -0.03, pop(0.6, u), 64);
+    if (i === 1) tag("~20 KM / GIÂY", 250, 300, -0.03, pop(0.6, u), 64);
   } },
   { shots: ["3", "4", "5"], draw(ts, i, u) {
     const hit = 2.2, boom = Math.max(0, ts - hit);
@@ -82,7 +82,7 @@ const SCENES = [
     if (boom) flash(1 - boom / 0.9);
     if (boom) night(i === 2 ? "#ffb890" : "#ffe2c0");
     if (i === 0) tag("MEXICO NGÀY NAY", 230, 420, -0.03, pop(0.4, u), 56);
-    if (i === 1) tag("SÁNG HƠN MẶT TRỜI", 180, 420, -0.03, pop(0.6, u), 52);
+    if (i === 1) tag("QUẢ CẦU LỬA", 180, 420, -0.03, pop(0.6, u), 52);
     if (i === 2) tag("RỪNG BỐC CHÁY", 250, 420, -0.03, pop(0.8, u), 56);
   } },
   { shots: ["6", "7"], draw(ts, i, u) {
@@ -101,7 +101,7 @@ const SCENES = [
     P("pc-song-than", 700 - 160 * sm(0, 5, ts), 2000, 1100, { flip: LEFT.song ? 0 : 1 });
     P("pc-song-than", 700 - 160 * sm(0, 5, ts), 3300 - 1300 * sm(0.2, 2.6, ts), 1100, { flip: LEFT.song ? 0 : 1 });
     ocean(ts, 1720);
-    tag("CAO 4,5 KM", 80, 420, -0.03, pop(1.6, ts), 64);
+    tag("CAO 4,5 KM, CHỐC LÁT", 80, 420, -0.03, pop(1.6, ts), 64);
   } },
   { shots: ["9", "10"], draw(ts, i, u) {
     if (i === 0) {

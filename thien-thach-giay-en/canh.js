@@ -164,4 +164,4 @@ const SCENES = [
   } },
 ];
 
-start({ plates: PLATES, cuts: CUTS, scenes: SCENES, card: ["Earth Stories", "10 MINUTES AFTER", "IMPACT"] });
+start({ plates: PLATES, cuts: CUTS, scenes: SCENES, card: ["Into Deep Time", "10 MINUTES AFTER", "IMPACT"] });

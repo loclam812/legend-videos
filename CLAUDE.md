@@ -93,7 +93,8 @@ node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and
 - The lengths in `durs.json` come from the real voice. To lay out a story while the voice is still
   being fetched, write estimated lengths there (about `1100 + 62 * letters` ms per line); `doc.js`
   overwrites the file when it finishes.
-- `giay/nhac.js` plays one unbroken pentatonic piece and only adds or drops layers with the mood.
+- `giay/nhac.js` plays one unbroken pentatonic piece and only adds or drops layers with the mood. `const MUSIC = "<piece>"` in
+  `loi.js` picks one of its `PIECES` (`song`, the default, and `air`, `earth`, `fire`, `water`, `stone`: each its own instruments, tempo, key and melody), so Shorts posted day after day do not share one tune (the user asked on 2026-11-25).
   The root `nhac.js` restarts a random melody at every mood change, which sounds harsh in a cut of
   short shots, and the user disliked it.
 - `giay/quay.js` steps the page frame by frame (`window.renderAt(seconds)`), so no frame is dropped.

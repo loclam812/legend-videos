@@ -1,7 +1,8 @@
 // The paper layers of the short "The 2.6 m millipede", copied from 300-trieu-nam-giay-en. See giay/sinh.js for plate, prop and puppet.
 // The plates are 1536x864 like the long video's: canh.js draws them enlarged to fill the tall frame.
 const W = [1536, 864];
-const BAN = "a young modern hiker with short black hair, an orange jacket, grey trousers, boots and a small green backpack";
+// each Short has its own explorer so the five do not repeat one face (the user asked on 2026-11-25)
+const BAN = "a young East Asian woman explorer with a long black braid, a yellow raincoat, blue jeans, brown boots and a red backpack";
 module.exports = ({ plate, prop, puppet }) => ({
   "pl-rung": plate("Deep inside a misty prehistoric swamp forest, far rows of very tall straight tree trunks with scaly bark fading into pale green fog, layered dark green and teal paper, soft light beams from above.", W),
   "pc-vay": prop("One very tall prehistoric scale tree, a straight green-brown trunk covered with a diamond pattern like snake scales, a small crown of drooping grass-like branches only at the very top", [512, 1024]),

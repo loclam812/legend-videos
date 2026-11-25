@@ -1,7 +1,8 @@
 // The paper layers of the short "Sharks in the rivers", copied from 300-trieu-nam-giay-en. See giay/sinh.js for plate, prop and puppet.
 // The plates are 1536x864 like the long video's: canh.js draws them enlarged to fill the tall frame.
 const W = [1536, 864];
-const BAN = "a young modern hiker with short black hair, an orange jacket, grey trousers, boots and a small green backpack";
+// each Short has its own explorer so the five do not repeat one face (the user asked on 2026-11-25)
+const BAN = "an older man with a grey beard, a wide-brimmed khaki hat, a khaki field shirt, brown trousers, boots and binoculars around his neck";
 module.exports = ({ plate, prop, puppet }) => ({
   "pl-rung": plate("Deep inside a misty prehistoric swamp forest, far rows of very tall straight tree trunks with scaly bark fading into pale green fog, layered dark green and teal paper, soft light beams from above.", W),
   "pl-nuoc": plate("Underwater in a murky river, layered torn paper bands from light green at the top to dark teal at the bottom, pale light rays from the surface, a few bubbles and water plants at the bottom edge.", W),

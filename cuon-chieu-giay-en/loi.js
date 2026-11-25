@@ -3,6 +3,7 @@
 // lasted about 45 million years and died out in the Permian. Its diet is inferred, not known.
 const LANG = "en";
 const TEMPO = 1.1;
+const MUSIC = "earth";
 const SUBS = false;
 const S = (label, mood, ...texts) => ({ label, mood, hot: [], lines: texts.map((t) => [null, t]) });
 const SHOTS = [

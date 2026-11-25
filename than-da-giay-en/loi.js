@@ -3,6 +3,7 @@
 // whose name means coal-bearing. Checked against web-search summaries on 2026-11-23, not the papers.
 const LANG = "en";
 const TEMPO = 1.1;
+const MUSIC = "stone";
 const SUBS = false;
 const S = (label, mood, ...texts) => ({ label, mood, hot: [], lines: texts.map((t) => [null, t]) });
 const SHOTS = [

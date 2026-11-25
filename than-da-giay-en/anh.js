@@ -1,7 +1,8 @@
 // The paper layers of the short "The forests that became coal", copied from 300-trieu-nam-giay-en. See giay/sinh.js for plate, prop and puppet.
 // The plates are 1536x864 like the long video's: canh.js draws them enlarged to fill the tall frame.
 const W = [1536, 864];
-const BAN = "a young modern hiker with short black hair, an orange jacket, grey trousers, boots and a small green backpack";
+// each Short has its own explorer so the five do not repeat one face (the user asked on 2026-11-25)
+const BAN = "a Black woman geologist with short curly hair, a white hard hat, blue work overalls, boots and a rock hammer on her belt";
 module.exports = ({ plate, prop, puppet }) => ({
   "pl-rung": plate("Deep inside a misty prehistoric swamp forest, far rows of very tall straight tree trunks with scaly bark fading into pale green fog, layered dark green and teal paper, soft light beams from above.", W),
   "pl-troi": plate("A warm hazy prehistoric sky made of layered torn paper bands from pale teal at the top to soft yellow at the bottom, a few cream paper clouds and a pale sun. No ground, no water, no trees.", W),

@@ -3,6 +3,7 @@
 // temnospondyl amphibians. Checked against web-search summaries, not the papers.
 const LANG = "en";
 const TEMPO = 1.1;
+const MUSIC = "water";
 const SUBS = false;
 const S = (label, mood, ...texts) => ({ label, mood, hot: [], lines: texts.map((t) => [null, t]) });
 const SHOTS = [

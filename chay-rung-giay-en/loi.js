@@ -3,6 +3,7 @@
 // (Scott & Glasspool 2006, PNAS). Burning damp plants at high oxygen follows the fire-window argument, not a measurement.
 const LANG = "en";
 const TEMPO = 1.1;
+const MUSIC = "fire";
 const SUBS = false;
 const S = (label, mood, ...texts) => ({ label, mood, hot: [], lines: texts.map((t) => [null, t]) });
 const SHOTS = [

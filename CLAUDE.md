@@ -1,7 +1,7 @@
 # Legend videos
 
 Animated Vietnamese folk tales and, since 2026-11-20, short science stories about the Earth's past, for YouTube. Every export uses free tools only: no paid image,
-video or voice service. Every story folder ends in `-giay` (paper-cut) or `-hoathinh` (cartoon): its picture is built from images a local model
+video or voice service. Every story folder ends in `-giay` (paper-cut; `-giay-en` for an English cut) or `-hoathinh` (cartoon): its picture is built from images a local model
 generates (see "Paper-cut stories").
 
 The older stories drew every frame as SVG by code. That engine and its stories (`mai-an-tiem-video/`,
@@ -35,6 +35,9 @@ it), because no prompt ever removed it.
 | `300-trieu-nam-giay/` | If you woke up 300 million years ago: wide, 47 shots, about 9 minutes | `300-trieu-nam-giay.mp4` |
 | `100-nghin-nam-giay/` | How long would you survive 100,000 years ago?, 20 shots | `100-nghin-nam-giay.mp4` |
 | `100-nghin-nam-hoathinh/` | The same story in the cartoon look (người que), 20 shots | `100-nghin-nam-hoathinh.mp4` |
+| `thien-thach-giay-en/` | English cut of the asteroid short, read by Kokoro | `thien-thach-giay-en.mp4` |
+| `300-trieu-nam-giay-en/` | English cut of the 300-million-year video, read by Kokoro at its own pace (8.5 minutes, past the 8-minute mark for mid-roll ads) | `300-trieu-nam-giay-en.mp4` |
+| `chuon-chuon-giay-en/`, `cuon-chieu-giay-en/`, `than-da-giay-en/`, `chay-rung-giay-en/`, `ca-map-giay-en/` | Five tall Shorts cut from the 300-million-year video (Meganeura, Arthropleura, coal, wildfires, sharks), 30 to 45 s each: new scripts, the long video's layers copied and laid out again for 1080x1920 | `<folder>.mp4` |
 
 The stories share some layers (skies, sea, ground, hut, King Hùng): the png or jpg is copied into each
 story's `anh/` and its prompt repeated in `anh.js`, so every folder still builds on its own.
@@ -44,7 +47,8 @@ A paper-cut story folder holds three files and `anh/`; the engine is shared in `
 - `loi.js`: `const SHOTS = [{ label, mood, hot, lines: [[speaker, text]] }]`. One short sentence
   per shot in a short. A speaker other than `null` needs an entry in `VOICES` of `doc.js`. The last shot is
   labelled `kết` and shows the title card. `const SUBS = false` burns in no subtitles and leaves only the paper labels on things in the picture (the
-  user asked for that on the science stories, which will also be made in English).
+  user asked for that on the science stories). `const LANG = "en"` makes it an English story (see Narration);
+  an English cut is its own `-en` folder with copies of `anh/`, `anh.js` and `canh.js`, its labels and title card in English.
   `const WIDE = true` in this file makes the story 1920x1080
   instead of 1080x1920: a long video, several sentences per shot, subtitles along the bottom.
 - `anh.js`: the layers, built with `plate` (full-frame backdrop, stored as jpg), `prop` and `puppet`
@@ -101,8 +105,11 @@ node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and
   `space` does); slim standing puppets are much taller than wide ones at the same width; an animal
   described as prehistoric comes back as a two-legged dinosaur unless the prompt says four legs and
   "not a dinosaur"; a globe shows today's continents, so `globe` draws hand-sketched outlines instead.
-- Science stories state figures. They were written from memory of published estimates (named in a
-  comment at the top of each `loi.js`) and nobody has checked them against the sources.
+- Science stories state figures, from published estimates named in a comment at the top of each `loi.js`.
+  On 2026-11-23 a web search checked every claim in the two science stories and the wording was softened where
+  it overstated (the 4.5 km wave was brief, the heated sky is debated, oxygen as the cause of giant insects is a
+  hypothesis). It read search summaries, not the papers, and some claims (the 20 km/s speed, the 3000 km to
+  Tanis, the sharks, crinoids and cockroaches) found no source. The Vietnamese mp4s were recorded before that fix.
 - Captions cover about 1320 to 1430 px in a short and the bottom 160 px in a wide story.
 - The machine has 24 GB and swaps heavily when other apps are open: run one heavy job at a time
   (generation or recording, not both). On 2026-11-20 Claude Code stopped both for low memory.
@@ -136,6 +143,10 @@ Needs `node`, `ffmpeg`, Playwright with a Chromium build, and `edge-tts` in a ve
 the repo root (ignored by git) holds `PLAYWRIGHT_PATH=<path-to>/node_modules/playwright` and, when needed,
 `CHROME`.
 
+English narration needs Kokoro-82M (code and weights Apache 2.0) in a Python 3.12 venv outside the repo:
+`uv venv ~/ai-models/kokoro --python 3.12`, then `uv pip install kokoro==0.9.4 soundfile` and the spaCy
+`en_core_web_sm` 3.8.0 wheel into it. The model (about 330 MB) downloads into `~/ai-models/hf` on first use.
+
 ## Narration
 
 `node doc.js <story-folder>` reads every line into `xuat/tieng` and writes `xuat/durs.json`; line lengths
@@ -148,6 +159,14 @@ each character with its own pitch in the `VOICES` table of `doc.js`.
   `NoAudioReceived` in bursts. `doc.js` waits and retries, and keeps every line it got in
   `xuat/giong-luu/` by voice and wording, so rerunning only fetches what is missing.
   `node doc.js <story-folder> say` uses the local macOS voice "Linh (Enhanced)" instead: one voice for all.
+- **edge-tts may not be licensed for monetised videos.** Microsoft staff say commercial use of these voices
+  without a paid Azure Speech resource may breach its terms. A story meant to earn money uses Kokoro or the
+  user's own voice.
+- A story with `const LANG = "en"` is read by Kokoro (`giay/doc_en.py`, voice `EN_VOICE` in `doc.js`, now
+  `af_heart`) in one run on this machine, offline after the first run downloads the model, cached in `xuat/giong-luu/` like the online voices.
+- A recording of the user's own at `<story-folder>/thu/<shot label>-<line index>.wav` (or `.m4a`, `.mp3`)
+  replaces that line, in any language, and is not sped up by `TEMPO`. Rerun `doc.js`, `giay/nhac.js` and
+  `giay/quay.js` after adding one.
 - A time range in an outline the user gives ("0:00–0:30 – Hook") sizes that part. Never read a clock mark
   out or show it as a label.
 

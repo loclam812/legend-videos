@@ -1,0 +1,58 @@
+// English cut of 300-trieu-nam-giay: "If you woke up 300 million years ago" (late Carboniferous), a wide long-form video.
+// Figures follow common published estimates: oxygen near 30 %, a day under 23 hours, Lepidodendron 30 to 40 m,
+// Meganeura about 70 cm across, Arthropleura over 2 m, Orthacanthus up to about 3 m. Oxygen as the cause of insect
+// gigantism is a leading hypothesis, not settled. Checked against web-search summaries on 2026-11-23, not the papers.
+const LANG = "en";
+const WIDE = true;
+const TEMPO = 1;
+const SUBS = false;
+const S = (label, mood, hot, ...texts) => ({ label, mood, hot, lines: texts.map((t) => [null, t]) });
+const SHOTS = [
+  S("h1", "wonder", ["forest"], "You open your eyes.", "All around you is a forest you have never seen.", "No birdsong. No traffic. Not a single person."),
+  S("h2", "tense", ["dragonfly"], "Only the hum of large wings.", "Something like a dragonfly flies past your face.", "Its wingspan is as long as an adult's arm."),
+  S("h3", "wonder", ["300 million years ago"], "Welcome to Earth, 300 million years ago.", "Could you survive here?"),
+  S("b1", "calm", ["Carboniferous"], "This period is called the Carboniferous.", "It lasted from about 359 to 299 million years ago.", "You are in its very last stretch."),
+  S("b2", "calm", ["dinosaurs"], "There are no dinosaurs yet.", "The first dinosaur will not appear for about another seventy million years.", "This world is older than theirs."),
+  S("b3", "calm", ["flower"], "No birds, no mammals, and not a single flower.", "Grass does not exist yet either.", "The ground holds only mosses, ferns and mud."),
+  S("b4", "wonder", ["Pangaea"], "Seen from space, Earth looks very strange.", "The continents are drifting together.", "They are about to join into one giant supercontinent called Pangaea."),
+  S("b5", "calm", ["equator"], "You are standing near the equator, where it is hot and humid all year round.", "Meanwhile, the lands near the South Pole lie under ice.", "Earth is in the middle of a long ice age."),
+  S("b6", "wonder", ["23 hours"], "A day here is shorter than today: under 23 hours.", "Because Earth spun faster back then.", "So a year has about 390 days."),
+  S("b7", "wonder", ["30 percent"], "And the air is very different.", "Today, oxygen makes up 21 percent of the air.", "Here, scientists estimate it reached about 30 percent."),
+  S("b8", "tense", ["giant creatures"], "That oxygen came from vast forests.", "And it helped create the giant creatures you are about to meet."),
+  S("k1", "wonder", ["forty meters"], "You stand up and look up.", "Tree trunks rise thirty, forty meters, straight as temple pillars.", "Their crowns spread high above, hiding almost all of the sky."),
+  S("k2", "calm", ["scale trees"], "But these are not trees as we know them.", "They are giant relatives of today's tiny clubmosses.", "Their bark is patterned like snake scales, so they are called scale trees."),
+  S("k3", "calm", ["horsetails"], "Beside them stand horsetails more than ten meters tall.", "Their stems have joints, like giant bamboo.", "In between are tree ferns, their crowns spread like umbrellas."),
+  S("k4", "tense", ["swamp"], "Under your feet is swamp.", "Dark, warm water, full of rotting leaves.", "With every step, you sink into the mud up to your ankles."),
+  S("k5", "calm", ["coal"], "When the giant trees fall, they sink into oxygen-poor mud.", "They do not fully rot, but pile up, layer upon layer.", "Pressed for millions of years, they turn into coal."),
+  S("k6", "wonder", ["Carboniferous"], "Many coal seams in Europe and North America were born from these very forests.", "That is why this period is called the Carboniferous: the coal-bearing age."),
+  S("k7", "tense", ["two meters"], "A rustling sound comes from behind you.", "You turn around and see a millipede-like creature more than two meters long.", "Its name is Arthropleura, the largest land arthropod ever known."),
+  S("k8", "calm", ["plants"], "Luckily for you, it most likely ate only plants.", "It crawls quietly past, like a small train with many legs."),
+  S("k9", "tense", ["Meganeura"], "Overhead, Meganeura are circling.", "They look like dragonflies, but their wings span seventy centimeters.", "And they are hunters, catching other insects in mid-air."),
+  S("k10", "calm", ["oxygen"], "Why were insects so big back then?", "Insects have no lungs. They breathe through tiny tubes all over their bodies.", "Many scientists think the oxygen-rich air let them grow larger.", "And there were no birds or bats in the sky to hunt them."),
+  S("k11", "bright", ["no mosquitoes"], "Ancient cockroaches crawl everywhere. They already look a lot like today's.", "But here is some good news: there are no mosquitoes yet."),
+  S("k12", "wonder", ["sharks"], "Offshore, the sea is just as crowded.", "This is a golden age of sharks, in all kinds of strange shapes.", "Much of the sea floor is covered in crinoids, animals that look like flowers on stalks."),
+  S("k13", "calm", ["silence"], "Back in the forest, the strangest thing may be the silence.", "No birdsong, no croaking frogs, no calling mammals.", "Only wind, water, and the whirr of insect wings."),
+  S("n1", "tense", ["underwater"], "But don't relax just yet.", "The greatest danger here is underwater."),
+  S("n2", "tense", ["amphibians"], "In the swamp lurk amphibians as big as crocodiles.", "They lie still in the mud, with only their eyes showing.", "Waiting for anything that passes by."),
+  S("n3", "battle", ["freshwater sharks"], "In the rivers swim freshwater sharks up to nearly three meters long.", "A long, sharp spine grows from the back of their heads.", "Wading across a river right now is a bad idea."),
+  S("n4", "tense", ["reptiles"], "On land, the first reptiles are appearing.", "Most are only as small as lizards.", "They hunt insects and smaller animals."),
+  S("n5", "wonder", ["shelled egg"], "They carry an invention that changed history: the shelled egg.", "With it, animals could breed far from water for the first time."),
+  S("n6", "wonder", ["distant ancestor"], "Another branch of egg-layers is the very distant ancestor of mammals.", "Which means that somewhere in this forest live relatives of yours."),
+  S("n7", "battle", ["fire"], "And then there is fire.", "With thirty percent oxygen, plants burn far more easily, even when damp.", "A single lightning strike is enough to start a huge wildfire."),
+  S("n8", "tense", ["wildfires"], "Fossil charcoal shows that wildfires were very common in this age."),
+  S("n9", "sad", ["heat exhaustion"], "And it is so hot and humid that sweat never dries.", "Your body could easily give out from heat exhaustion.", "At night the forest goes pitch black, filled only with the buzz of insects."),
+  S("s1", "calm", ["survive"], "So how would you survive?"),
+  S("s2", "calm", ["water"], "First, water.", "Swamp water is stagnant and full of rotting plants.", "Collect rainwater, or find a flowing stream.", "And boil it if you can."),
+  S("s3", "tense", ["Starting a fire"], "Starting a fire here is easy.", "But keeping it from spreading is hard.", "Build your fire on bare ground, far from dry wood."),
+  S("s4", "sad", ["food"], "Next, food.", "There is no fruit, no rice, no vegetable you would recognize.", "Most plants here have never been eaten by humans, and no one knows if they are poisonous."),
+  S("s5", "bright", ["insects"], "Safer sources of protein are fish and insects.", "A giant insect roasted over the fire could be your dinner.", "It sounds scary, but many places in the world still eat insects today."),
+  S("s6", "calm", ["dry ground"], "For shelter, move away from the swamp.", "Find high, dry ground, where fewer predators lurk.", "Giant fern leaves can make a roof."),
+  S("s7", "tense", ["storms"], "You will need that roof.", "In this tropical forest, thunderstorms roll in very often.", "And every storm brings lightning."),
+  S("e1", "wonder", ["survive"], "So could a modern human survive in the Carboniferous?"),
+  S("e2", "bright", ["Breathing"], "Breathing would be fine.", "The oxygen-rich air might even help you tire less easily.", "For days, even weeks, a resourceful person could get by."),
+  S("e3", "sad", ["very hard"], "But in the long run, it would be very hard.", "No crops, no medicine, no one beside you.", "And every lightning strike could turn the forest into a sea of fire."),
+  S("e4", "calm", ["not made for us"], "That world was not made for us.", "It belongs to giant insects, amphibians and swamp forests."),
+  S("e4b", "sad", ["drying"], "And that world itself is about to change.", "The climate is drying, and the swamp forests are starting to shrink.", "Amphibians lose their homes. And the reptiles, with their shelled eggs, will take over."),
+  S("e5", "wonder", ["owe"], "But we still owe it a debt.", "Coal from those forests powered the Industrial Revolution.", "And the small egg-laying animals of that time began the line that led to humans."),
+  S("kết", "bright", ["follow"], "If you could choose, which age would you wake up in next?", "Leave a comment, and follow the channel to keep traveling with us!"),
+];

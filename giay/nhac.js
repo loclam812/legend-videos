@@ -86,14 +86,14 @@ for (let i = 0; i < out.length; i++) {
   out[i] += 0.16 * lvl * (Math.sin(ph1) + 0.6 * Math.sin(ph2)) * (0.85 + 0.15 * Math.sin(2 * Math.PI * 0.2 * t));
 }
 
-// soften the top, fade the ends, and sit lower than the old bed (-23 dBFS RMS)
+// soften the top, fade the ends, and sit at -33 dBFS RMS: the user found -27 drowned the voice (2026-11-25)
 let y = 0;
 for (let i = 0; i < out.length; i++) { y += 0.45 * (out[i] - y); out[i] = y; }
 const fade = 1.5 * SR;
 for (let i = 0; i < fade; i++) { out[i] *= Math.min(1, i / (0.3 * SR)); out[out.length - 1 - i] *= i / fade; }
 const rms = Math.sqrt(out.reduce((a, v) => a + v * v, 0) / out.length);
 const peak = out.reduce((a, v) => Math.max(a, Math.abs(v)), 0);
-const gain = Math.min(10 ** (-27 / 20) / rms, 0.9 / peak);
+const gain = Math.min(10 ** (-33 / 20) / rms, 0.9 / peak);
 
 const pcm = Buffer.alloc(44 + out.length * 2);
 pcm.write("RIFF", 0); pcm.writeUInt32LE(36 + out.length * 2, 4); pcm.write("WAVEfmt ", 8); pcm.writeUInt32LE(16, 16); pcm.writeUInt16LE(1, 20); pcm.writeUInt16LE(1, 22);

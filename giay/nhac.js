@@ -62,12 +62,6 @@ function drum(f0) {
   return b;
 }
 
-// glassy and long, for water and wonder
-function bell(f, dur) {
-  const b = new Float32Array(Math.round(Math.max(dur, 2.5) * SR));
-  for (let i = 0; i < b.length; i++) { const t = i / SR; b[i] = Math.min(1, t / 0.003) * (Math.exp(-t * 1.8) * Math.sin(2 * Math.PI * f * t) + 0.35 * Math.exp(-t * 4) * Math.sin(2 * Math.PI * 2.76 * f * t) + 0.12 * Math.exp(-t * 7) * Math.sin(2 * Math.PI * 5.4 * f * t)); }
-  return b;
-}
 // breathy and held, for air
 function flute(f, dur) {
   const b = new Float32Array(Math.round(dur * SR));
@@ -83,7 +77,7 @@ function flute(f, dur) {
 // a marimba: wooden bar with its fourth partial, short
 function marimba(f, dur) {
   const b = new Float32Array(Math.round(Math.min(dur, 0.9) * SR));
-  for (let i = 0; i < b.length; i++) { const t = i / SR; b[i] = Math.min(1, t / 0.002) * (Math.exp(-t * 6) * Math.sin(2 * Math.PI * f * t) + 0.3 * Math.exp(-t * 25) * Math.sin(8 * Math.PI * f * t)); }
+  for (let i = 0; i < b.length; i++) { const t = i / SR; b[i] = Math.min(1, t / 0.002) * (Math.exp(-t * 6) * Math.sin(2 * Math.PI * f * t) + 0.12 * Math.exp(-t * 25) * Math.sin(8 * Math.PI * f * t)); }
   return b;
 }
 // a harp string that rings on
@@ -101,7 +95,7 @@ function bass(f, dur) {
 // two detuned voices that swell in and out, for a sustained chord
 function pad(f, dur) {
   const b = new Float32Array(Math.round(dur * SR));
-  for (let i = 0; i < b.length; i++) { const t = i / SR, w = 2 * Math.PI * f * t; b[i] = 0.5 * (Math.sin(w) + Math.sin(w * 1.006) + 0.4 * Math.sin(2 * w)) * Math.min(1, t / 0.8, (dur - t) / 0.8); }
+  for (let i = 0; i < b.length; i++) { const t = i / SR, w = 2 * Math.PI * f * t; b[i] = 0.5 * (Math.sin(w) + Math.sin(w * 1.002) + 0.4 * Math.sin(2 * w)) * Math.min(1, t / 0.8, (dur - t) / 0.8); }
   return b;
 }
 // noise from a fixed generator, so the same story always gets the same sound
@@ -136,7 +130,8 @@ const MELODIES = {
 // Each piece has its own instruments, not only its own tune: the first version changed only tempo, key and melody
 // over the same đàn bầu, drone and drums, and under the voice the user heard no difference (2026-11-25).
 // beat(k, t, level, [root, fifth, octave], note) plays beat k; drone scales the held low note (0 drops it);
-// root "F" holds the major drone whatever the moods say.
+// root "F" holds the major drone whatever the moods say. db moves the bed from -33 dBFS RMS: struck sounds (marimba, bell,
+// harp) peak far above their average, so at the same RMS they stuck out over the voice and the user asked for them quieter.
 const PIECES = {
   song: { bpm: 72, shift: 0, melody: "song", lift: 0, drone: 1, beat(k, t, level, R, note) {
     // a sad part keeps only the first note of each bar
@@ -151,12 +146,12 @@ const PIECES = {
     if (k % 4 === 0) [R[1] * 2, R[2] * 2].forEach((f) => put(pad(f, BEAT * 4.4), t, 0.2));
     if (level >= 2 && k % 2 === 0) put(harp(R[2] * 3, BEAT), t + BEAT / 2, 0.15);
   } },
-  // a marimba walking over a bass on every other beat and a soft tick
-  earth: { bpm: 66, shift: -5, melody: "walk", lift: 0, drone: 0, beat(k, t, level, R, note) {
-    if (note) put(marimba(N(note), BEAT), t, 0.6);
-    if (k % 2 === 0) put(bass(R[k % 4 ? 1 : 0] * 2, BEAT * 0.9), t, 0.5);
-    put(hat(), t, 0.1);
-    if (level >= 2) { put(hat(), t + BEAT / 2, 0.07); if (k % 4 === 0) put(drum(90), t, 0.45); }
+  // a soft marimba over a round bass on every other beat; no noise ticks (the first version's ticks and driven bass
+  // grated on the user)
+  earth: { bpm: 66, shift: -5, melody: "walk", lift: 0, drone: 0.5, db: -6, beat(k, t, level, R, note) {
+    if (note) put(marimba(N(note), BEAT), t, 0.5);
+    if (k % 2 === 0) put(pluck(R[k % 4 ? 1 : 0] * 2, BEAT * 1.5), t, 0.4);
+    if (level >= 2 && k % 4 === 0) put(drum(90), t, 0.3);
   } },
   // drums on every beat and a bouncing bass, no melody instrument held long
   fire: { bpm: 104, shift: 1, melody: "run", lift: 1, drone: 0, beat(k, t, level, R, note) {
@@ -168,13 +163,13 @@ const PIECES = {
     put(bass(R[0] * 2, BEAT * 0.3), t + BEAT / 2, 0.3);
     if (note && k % 2 === 0) put(marimba(N(note), BEAT), t, 0.3);
   } },
-  // long underwater chords and a bell, no drums
-  water: { bpm: 56, shift: -3, melody: "deep", lift: 0, drone: 1, beat(k, t, level, R, note) {
-    if (k % 4 === 0) { put(pad(R[0] * 2, BEAT * 4.5), t, 0.3); put(pad(R[1] * 2, BEAT * 4.5), t, 0.22); put(pad(R[0] * 4, BEAT * 4.5), t, 0.1); }
-    if (note) put(bell(N(note), BEAT * 2), t, 0.4);
+  // long chords under a slow harp; no bell (its inharmonic partials sounded out of tune to the user)
+  water: { bpm: 56, shift: -3, melody: "deep", lift: 0, drone: 1, db: -6, beat(k, t, level, R, note) {
+    if (k % 4 === 0) { put(pad(R[0] * 2, BEAT * 4.5), t, 0.25); put(pad(R[1] * 2, BEAT * 4.5), t, 0.18); }
+    if (note) put(harp(N(note), BEAT * 2), t, 0.4);
   } },
   // a harp spelling a major chord in eighths, brighter than the rest
-  stone: { bpm: 76, shift: -2, melody: "rise", lift: 0, drone: 0.6, root: "F", beat(k, t, level, R, note) {
+  stone: { bpm: 76, shift: -2, melody: "rise", lift: 0, drone: 0.6, root: "F", db: -6, beat(k, t, level, R, note) {
     const arp = [R[0] * 2, R[1] * 2, R[2] * 2, R[2] * 2.52];
     put(harp(arp[(2 * k) % 4], BEAT), t, 0.18); put(harp(arp[(2 * k + 1) % 4], BEAT), t + BEAT / 2, 0.14);
     if (note) put(harp(N(note), BEAT * 2), t, 0.42);
@@ -212,7 +207,7 @@ const fade = 1.5 * SR;
 for (let i = 0; i < fade; i++) { out[i] *= Math.min(1, i / (0.3 * SR)); out[out.length - 1 - i] *= i / fade; }
 const rms = Math.sqrt(out.reduce((a, v) => a + v * v, 0) / out.length);
 const peak = out.reduce((a, v) => Math.max(a, Math.abs(v)), 0);
-const gain = Math.min(10 ** (-33 / 20) / rms, 0.9 / peak);
+const gain = Math.min(10 ** ((-33 + (PIECE.db || 0)) / 20) / rms, 0.9 / peak);
 
 const pcm = Buffer.alloc(44 + out.length * 2);
 pcm.write("RIFF", 0); pcm.writeUInt32LE(36 + out.length * 2, 4); pcm.write("WAVEfmt ", 8); pcm.writeUInt32LE(16, 16); pcm.writeUInt16LE(1, 20); pcm.writeUInt16LE(1, 22);

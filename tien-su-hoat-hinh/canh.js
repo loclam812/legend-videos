@@ -1,260 +1,246 @@
-// The cartoon scenes of "Surviving the Ice Age in a mammoth-bone house", the tien-su-hoat-hinh cut
-// of the mammoth-bone house story. The engine is giay/may.js with look "toon", and the layers are
-// the flat ones from anh.js (the very images of nha-xuong-mamut-hoathinh). The staging follows the
-// user's six-scene outline: the frozen world and the struggle (hook-2), the reveal of the bone house
-// and the animal it came from (3-4), building it (5-6), the family by the fire inside (7), the small
-// entrance and the smoke hole (8), the pull-back and the final wide shot (9-kết).
-// Every shot is ONE held still illustration (the user asked on 2026-11-22 for a static picture
-// with no character animation, like the storytime frames they showed): the poses and a few drawn
-// symbols tell the motion, and every time-driven helper is called at a fixed moment, so the snow,
-// the smoke and the fire hang frozen in place too.
-const PLATES = ["pl-troi-am", "pl-chieu"];
-const CUTS = ["pc-nha", "pc-khung", "pc-xuong", "pc-dem", "pc-lua",
-  "pg-nhom", "pg-run", "pg-nang", "pg-keo", "pg-gia-dinh", "pg-mamut"];
-// which way the generated pieces face, found by looking at them: 1 means the piece faces left as
-// generated. Re-checked against the images regenerated on 2026-11-23 (after the scene clause was
-// cut from the style): pg-nhom walks LEFT again, pg-run faces left, pg-nang and pg-keo face right,
-// pg-gia-dinh reads right, pg-mamut walks left on four legs.
-const LEFT = { nhom: 1, run: 1, nang: 0, keo: 0, giadinh: 0, mamut: 1 };
+// The paper-cut scenes of "Surviving the Ice Age in a mammoth-bone house", restyled on 2026-11-23 after the paper-cut
+// short the user sent as the reference. The engine is giay/may.js with look "storybook": yellow captions in short
+// chunks, torn cream sheets, black bands and an iris between the scenes, paper labels, and every cut-out glued on
+// white paper. The staging still follows the user's six-part outline: the frozen world and the struggle (hook-2),
+// the bone house and the animal it came from (3-4), building it (5-6), the family by the fire inside (7), the small
+// entrance and the smoke hole (8), the wide dusk shot (9-kết).
+// The cartoon cut before this one held every shot still (asked for on 2026-11-22; it is in git history, 50ef86d).
+// The reference keeps its paper alive, so this cut does too: a slow push-in, falling snow, wind, cut-outs that walk,
+// smoke, and labels that pop in with the words. It is still only paper that slides, turns and pops.
+// Layout: the painted landscapes (pl-canh-*) carry the sky and the whole snowfield down to the bottom edge, as the
+// reference fills its frame. The plain begins at about 1170 px, so standing figures keep their feet on G and the
+// captions (1250-1415 px) fall on the snow in front of them; everything a label points at sits between 640 and 1250 px.
+const PLATES = ["pl-canh-bao", "pl-canh-nang", "pl-canh-chieu", "pl-trong"];
+const CUTS = ["pc-nha", "pc-khung", "pc-xuong", "pg-nhom", "pg-run", "pg-nang", "pg-keo", "pg-mamut"];
+// which way the generated pieces face, found by looking at them: 1 means the piece faces left as generated
+const LEFT = { nhom: 0, run: 1, nang: 0, keo: 1, mamut: 1 };
 // flip a piece so it faces the way the scene needs
 const F = (key, wantLeft) => (LEFT[key] ? !wantLeft : !!wantLeft);
-
-// keep a sky plate's edges outside the frame even if it comes back with a border
-const back = (name, t, total) => { out.save(); out.translate(540, 960); out.scale(1.16, 1.16); out.translate(-540, -960); plate(name, t, total, 0.5); out.restore(); };
-
-const flame = (x, y, w, t, n = 0) => P("pc-lua", x, y, w * (1 + 0.08 * Math.sin(t * 11 + n)), { rot: 0.05 * Math.sin(t * 7 + n), shadow: 0 });
+const G = 1215; // the ground line: where the feet of a standing figure go, a little below the foot of the far hills
+// the entrance of the hut cut-out, measured on the keyed piece: from its bottom centre a tenth of its width to the
+// left and a fifth of its width up
+const DOOR = [-0.105, 0.2];
 const wrap = (v, m) => ((v % m) + m) % m;
 
-// falling snow, k = how hard it snows (0..1). The wind blows from the right, against anyone walking right
+// paper snowflakes falling, k = how hard it snows (0..1). The wind blows from the right, into the face of anyone
+// walking right, which is the way the family walks
 function snow(t, k = 1) {
-  for (let i = 0; i < 110; i++) {
+  for (let i = 0; i < 90; i++) {
     if (rnd(i, 41) > k) continue;
-    const sp = 260 + 320 * rnd(i, 42), drift = 140 + 260 * rnd(i, 43);
+    const sp = 200 + 300 * rnd(i, 42), drift = 120 + 220 * rnd(i, 43);
     const y = wrap(rnd(i, 44) * (OH + 80) + t * sp, OH + 80) - 40;
     const x = wrap(rnd(i, 45) * (OW + 600) - t * drift, OW + 600) - 300;
+    const r = 8 + 14 * rnd(i, 47);
     out.save();
-    out.globalAlpha = 0.55 + 0.45 * rnd(i, 46);
-    out.fillStyle = "#ffffff"; out.strokeStyle = "#2a1608"; out.lineWidth = 3;
-    const r = 7 + 13 * rnd(i, 47);
-    out.beginPath(); out.arc(x, y, r, 0, 7); out.fill(); out.stroke();
+    out.globalAlpha = 0.8 + 0.2 * rnd(i, 46);
+    out.shadowColor = "rgba(30,20,50,.35)"; out.shadowBlur = 5; out.shadowOffsetX = 3; out.shadowOffsetY = 4;
+    out.fillStyle = "#fbfaf6";
+    out.beginPath();
+    for (let j = 0; j < 12; j++) { const a = j * Math.PI / 6 + i, q = j % 2 ? r * 0.55 : r; out.lineTo(x + Math.cos(a) * q, y + Math.sin(a) * q); }
+    out.closePath(); out.fill();
     out.restore();
   }
 }
 
-// white streaks of wind sweeping leftwards across the sky
+// slanting streaks of wind-blown snow sweeping from right to left across the sky
 function gust(t, k = 1) {
   out.save();
-  out.strokeStyle = "#ffffff"; out.lineCap = "round"; out.lineWidth = 8;
-  for (let i = 0; i < 3; i++) {
-    const ph = (t * (0.3 + 0.15 * rnd(i, 51)) + rnd(i, 52)) % 1;
-    const x = OW + 260 - ph * (OW + 1000), y = 260 + 400 * i + 40 * Math.sin(t + i * 2.1);
+  out.lineCap = "round"; out.strokeStyle = "#f2f0e8";
+  for (let i = 0; i < 16; i++) {
+    const ph = wrap(t * (0.25 + 0.3 * rnd(i, 51)) + rnd(i, 52), 1), len = 120 + 260 * rnd(i, 53);
+    const x = OW + 320 - ph * (OW + 900), y = 60 + rnd(i, 54) * 1120 + 30 * Math.sin(t * 0.8 + i);
     out.globalAlpha = k * 0.7 * Math.sin(Math.PI * ph);
-    out.beginPath(); out.moveTo(x, y); out.quadraticCurveTo(x - 260, y - 46, x - 520, y - 8); out.stroke();
+    out.lineWidth = 4 + 5 * rnd(i, 55);
+    out.beginPath(); out.moveTo(x, y); out.lineTo(x + len, y - len * 0.45); out.stroke();
   }
   out.restore();
 }
 
-// the shaking marks beside a freezing figure — a held symbol, the way the storytime frames the
-// user showed tell motion with little marks instead of moving anything
-function shiver(x, y, dx) {
-  out.save();
-  out.strokeStyle = "#2a1608"; out.lineWidth = 5; out.lineCap = "round";
-  for (const s of [-1, 1])
-    for (let j = 0; j < 3; j++) {
-      out.globalAlpha = 0.75;
-      out.beginPath();
-      out.arc(x + s * dx, y + 60 * j, 14, Math.PI * 0.15, Math.PI * 0.95, s < 0);
-      out.stroke();
-    }
-  out.restore();
-}
-
-// snow drifts: flat wavy bands over the ground and the walkers' feet, drawn by code — every
-// generated snow strip came back with a painted figure standing on it, so no layer is used here
-function drifts(top) {
-  out.save();
-  out.strokeStyle = "#2a1608"; out.lineWidth = 5;
-  const band = (y, a, p, col) => {
-    out.fillStyle = col; out.beginPath();
-    out.moveTo(-40, OH + 20); out.lineTo(-40, y);
-    for (let x = -40; x < OW + 40; x += 120)
-      out.quadraticCurveTo(x + 60, y + a * Math.sin((x + 60) / 160 + p), x + 120, y + a * Math.sin((x + 120) / 320 + p));
-    out.lineTo(OW + 40, OH + 20); out.closePath(); out.fill(); out.stroke();
-  };
-  band(top, 26, 1.7, "#d3e0ec");      // the far drift, pale blue
-  band(top + 55, 34, 4.6, "#f1f5f9");  // the near drift, white
-  out.restore();
-}
-
-// grey puffs rising from the smoke hole, bending with the wind
+// paper puffs of smoke leaving a hole: flat grey-cream discs that rise, lean with the wind and fade
 function smoke(x, y, t, k = 1) {
-  out.save();
-  for (let i = 0; i < 6; i++) {
-    const p = (t * 0.35 + i / 6) % 1;
-    out.globalAlpha = k * 0.55 * (1 - p);
-    out.fillStyle = "#cfd3d6"; out.strokeStyle = "#2a1608"; out.lineWidth = 4;
-    out.beginPath(); out.arc(x - 40 * p + 20 * Math.sin(t * 0.9 + i * 2.4) * p, y - 330 * p, 16 + 44 * p, 0, 7); out.fill(); out.stroke();
+  for (let i = 0; i < 8; i++) {
+    const p = wrap(t * 0.2 + i / 8, 1), r = 12 + 42 * p;
+    out.save();
+    out.globalAlpha = k * 0.92 * Math.min(1, 8 * p) * (1 - sm(0.72, 1, p));
+    out.shadowColor = "rgba(20,12,30,.3)"; out.shadowBlur = 8; out.shadowOffsetX = 5; out.shadowOffsetY = 7;
+    out.fillStyle = i % 2 ? "#eceae4" : "#dcd9d2";
+    out.beginPath(); out.arc(x - 70 * p + 12 * Math.sin(t * 1.1 + i * 2.4) * p, y - 380 * p, r, 0, 7); out.fill();
+    out.restore();
   }
-  out.restore();
 }
 
-// the inside of the bone hut, drawn by code: both generated interior plates came back with
-// people painted into the room (the stick-figure style adds them to any interior) or with a
-// duplicated skull and patch seams, so no layer is used here
-function trongNha() {
-  out.save();
-  out.strokeStyle = "#2a1608"; out.lineWidth = 5;
-  // the hide wall: one warm brown field with rows of stitches
-  out.fillStyle = "#9a6a3d"; out.fillRect(-10, -10, OW + 20, 1580);
-  out.fillStyle = "#6f4a26";
-  for (let r = 0; r < 4; r++)
-    for (let i = 0; i < 12; i++)
-      out.fillRect(40 + i * 88 + 18 * rnd(i, 61 + r), 300 + 310 * r, 26, 6);
-  // the earthen floor
-  out.fillStyle = "#7d5530"; out.fillRect(-10, 1560, OW + 20, OH - 1550);
-  out.beginPath(); out.moveTo(-10, 1560); out.lineTo(OW + 10, 1560); out.stroke();
-  // big white ribs arching across the ceiling: dark outline first, flat white on top
-  for (let i = 0; i < 4; i++) {
-    const y0 = 1440 - 250 * i;
-    out.beginPath(); out.moveTo(-30, y0); out.quadraticCurveTo(540, y0 - 430, OW + 30, y0);
-    out.lineWidth = 32; out.strokeStyle = "#2a1608"; out.stroke();
-    out.lineWidth = 22; out.strokeStyle = "#f7f3ec"; out.stroke();
-  }
-  // one mammoth skull set in the wall, with its two tusks
-  out.lineWidth = 5; out.strokeStyle = "#2a1608"; out.fillStyle = "#f7f3ec";
-  out.beginPath(); out.ellipse(270, 420, 170, 130, 0, 0, 7); out.fill(); out.stroke();
-  out.fillStyle = "#2a1608";
-  out.beginPath(); out.arc(210, 420, 30, 0, 7); out.fill();
-  out.beginPath(); out.arc(330, 420, 30, 0, 7); out.fill();
-  out.beginPath(); out.ellipse(270, 490, 20, 28, 0, 0, 7); out.fill();
-  for (const s of [-1, 1]) {
-    out.beginPath(); out.moveTo(270 + s * 90, 520); out.quadraticCurveTo(270 + s * 120, 610, 270 + s * 60, 660);
-    out.lineWidth = 24; out.strokeStyle = "#2a1608"; out.stroke();
-    out.lineWidth = 14; out.strokeStyle = "#f7f3ec"; out.stroke();
-  }
-  // the ring of hearth stones around the fire
-  out.lineWidth = 5; out.strokeStyle = "#2a1608"; out.fillStyle = "#8d949c";
-  for (let i = 0; i < 9; i++) {
-    const a = (i / 9) * Math.PI * 2;
-    out.beginPath();
-    out.ellipse(540 + 150 * Math.cos(a), 1705 + 60 * Math.sin(a), 26 + 8 * rnd(i, 71), 19 + 6 * rnd(i, 72), rnd(i, 73), 0, 7);
-    out.fill(); out.stroke();
-  }
-  out.restore();
-}
-
-// a warm pool of firelight
-const glow = (x, y, r, a = 0.5) => {
+// a warm pool of firelight, breathing a little
+const glow = (x, y, r, a = 0.5, t = 0) => {
+  const k = a * (1 + 0.12 * Math.sin(t * 6.3) + 0.06 * Math.sin(t * 11));
   const g = out.createRadialGradient(x, y, 0, x, y, r);
-  g.addColorStop(0, `rgba(255,190,90,${a})`); g.addColorStop(1, "rgba(255,190,90,0)");
+  g.addColorStop(0, `rgba(255,200,110,${k})`); g.addColorStop(0.5, `rgba(255,170,80,${k * 0.45})`); g.addColorStop(1, "rgba(255,160,70,0)");
   out.fillStyle = g; out.fillRect(x - r, y - r, 2 * r, 2 * r);
 };
 
+// a tuft of dry grass: five blades of ochre and olive paper
+function tuft(x, y, k, n) {
+  if (k <= 0) return;
+  out.save(); out.translate(x, y); out.scale(k, k);
+  out.shadowColor = "rgba(40,20,10,.4)"; out.shadowBlur = 8; out.shadowOffsetY = 4;
+  for (let j = 0; j < 5; j++) {
+    const a = -Math.PI / 2 + (j - 2) * 0.38 + 0.1 * (rnd(n * 7 + j, 77) - 0.5), len = 34 + 26 * rnd(n * 7 + j, 78);
+    out.fillStyle = j % 2 ? "#c9a44a" : "#8d9a4a";
+    out.beginPath(); out.moveTo(-9, 0);
+    out.quadraticCurveTo(Math.cos(a) * len * 0.5 - 14, Math.sin(a) * len * 0.6, Math.cos(a) * len, Math.sin(a) * len);
+    out.quadraticCurveTo(Math.cos(a) * len * 0.5 + 14, Math.sin(a) * len * 0.6, 9, 0); out.fill();
+  }
+  out.restore();
+}
+
+// a cut-out that walks: v px/s toward dir (1 right, -1 left), a light bob and sway, turned to face the way it goes
+const walk = (name, x0, y, w, t, v, dir = 1) =>
+  P(name, x0 + dir * v * t, y + hop(t, 6.5, 7), w, { rot: 0.012 * Math.sin(t * 13), flip: F(name.slice(3), dir < 0) });
+
+// the hide cover going up over the bone frame: the covered hut shows from the ground upwards behind a torn edge,
+// with the rolled hem of the hide riding on that edge until the top is reached
+function cover(k, x, y, w) {
+  if (k <= 0) return;
+  const top = y - k * tall("pc-nha", w), x0 = x - w / 2 - 20, dx = (w + 40) / 20, hem = [];
+  for (let i = 0; i <= 20; i++) hem.push(top + 16 * (rnd(i, 86) - 0.5));
+  out.save();
+  out.beginPath(); out.moveTo(x0, y + 60); out.lineTo(x0, hem[0]);
+  hem.forEach((h, i) => out.lineTo(x0 + i * dx, h)); out.lineTo(x0 + 20 * dx, y + 60); out.closePath(); out.clip();
+  P("pc-nha", x, y, w);
+  out.restore();
+  out.save();
+  out.globalAlpha = 1 - sm(0.86, 1, k);
+  out.beginPath(); out.moveTo(x0, hem[0]); hem.forEach((h, i) => out.lineTo(x0 + i * dx, h));
+  out.lineWidth = 18; out.lineCap = "round"; out.lineJoin = "round";
+  out.shadowColor = "rgba(40,20,10,.5)"; out.shadowBlur = 12; out.shadowOffsetY = 8;
+  out.strokeStyle = "#6b4a2b"; out.stroke();
+  out.restore();
+}
+
+// the inside of the hut: the painted room (the one plate with the family in it) drawn large enough to crop the pale
+// border the model paints on the sheet, with the fur bedding ending just above the captions; the tan floor in front
+// is the room's own floor strip, mirrored again and again down to the bottom edge and growing darker toward the
+// camera. The room pushes in slowly, the family staying put
+function trong(t) {
+  const img = L["pl-trong"], s = (OW / img.width) * (1.1 + 0.04 * sm(0, 6, t)), left = (OW - img.width * s) / 2, base = 1245, h = 120 * s;
+  out.fillStyle = "#2a1a10"; out.fillRect(0, 0, OW, OH);
+  const top = base - 1330 * s;
+  out.drawImage(img, 0, 0, img.width, 1490, left, top, img.width * s, 1490 * s);
+  for (let y = top + 1490 * s, flip = 1; y < OH; y += h, flip = !flip) {
+    out.save(); out.translate(0, flip ? y + h : y); if (flip) out.scale(1, -1);
+    out.drawImage(img, 24, 1350, 840, 120, left + 24 * s, 0, 840 * s, h);
+    out.restore();
+  }
+  const g = out.createLinearGradient(0, base + 60, 0, OH);
+  g.addColorStop(0, "rgba(24,13,8,0)"); g.addColorStop(1, "rgba(24,13,8,.88)");
+  out.fillStyle = g; out.fillRect(0, base + 60, OW, OH - base - 60);
+}
+
 // a scene serves one or more shots in a row: ts = seconds since the scene began, i = which of its shots, u = seconds into that shot
 const SCENES = [
-  // the frozen world: one held frame of the storm, the family small in it, the distant dome
-  { shots: ["hook"], draw() {
-    plate("pl-troi-am", 4, 9, 0.5);
-    ground("#e8edf3", 1380);
-    P("pc-nha", 900, 1550, 300);
-    P("pg-nhom", 430, 1700, 330, { flip: F("nhom", false) });
-    gust(1.5, 1); snow(1.5, 1);
+  // the frozen world: the storm, the bone house ahead with smoke, the family small in the snow, the title over them
+  { shots: ["hook"], draw(ts) {
+    plate("pl-canh-bao", ts, 4.3);
+    smoke(790, G + 8 - tall("pc-nha", 470), ts, 0.8);
+    P("pc-nha", 790, G + 8, 470);
+    walk("pg-nhom", 140, G, 360, ts, 26);
+    chip(["KỶ BĂNG HÀ", "20.000 NĂM TRƯỚC"], 540, 400, pop(0.4, ts));
+    gust(ts, 1); snow(ts, 1);
   } },
 
-  // closer: mid-stride through it, then stopped and freezing with the shiver marks, nothing modern
-  { shots: ["1", "2"], draw(ts, i) {
-    plate("pl-troi-am", 4, 12, 0.5);
-    ground("#e8edf3", 1400);
-    P("pc-nha", 920, 1580, 390);
-    if (i === 0) {
-      P("pg-nhom", 480, 1690, 520, { flip: F("nhom", false) });
-    } else {
-      P("pg-run", 540, 1700, 180);
-      shiver(540, 1390, 120);
-    }
-    gust(2, 1); snow(2, 1);
+  // the family mid-stride through the storm, into the wind, crossing the frame
+  { shots: ["1"], cut: "sheet", draw(ts) {
+    plate("pl-canh-bao", ts, 4.8);
+    walk("pg-nhom", 150, G, 640, ts, 85);
+    gust(ts, 1); snow(ts, 1);
   } },
 
-  // the reveal: the bone house standing ahead of them, then the animal the bones came from beside it
-  { shots: ["3", "4"], draw(ts, i) {
-    plate("pl-troi-am", 4, 13, 0.5);
-    ground("#e8edf3", 1420);
-    if (i === 0) {
-      rays(690, 1080, 2, 0.1);
-      P("pc-nha", 690, 1720, 660);
-      P("pg-nhom", 300, 1690, 400, { flip: F("nhom", false) });
-    } else {
-      // kept apart: at one centre the brown mammoth melted into the brown hide of the house
-      P("pc-nha", 360, 1700, 520);
-      P("pg-mamut", 840, 1700, 560, { flip: F("mamut", true) });
-    }
-    snow(3, 0.55);
+  // stopped and freezing, the whole cut-out trembling, and nothing modern: three labels pop in over her
+  { shots: ["2"], cut: "band", draw(ts) {
+    plate("pl-canh-bao", ts, 4.8);
+    const j = Math.sin(ts * 23);
+    P("pg-run", 540 + 3 * j, G + 1.5 * Math.sin(ts * 31), 250, { rot: 0.012 * j, flip: F("run", false) });
+    chip("KHÔNG CÓ NHÀ BÊ TÔNG", 540, 250, pop(0.25, ts), { size: 40 });
+    chip("KHÔNG CÓ MÁY SỞI", 540, 345, pop(1.4, ts), { size: 40 });
+    chip("KHÔNG CÓ QUẦN ÁO HIỆN ĐẠI", 540, 440, pop(2.6, ts), { size: 40 });
+    gust(ts, 1); snow(ts, 1);
   } },
 
-  // building it: the bare bone frame with the bone carrier, then the hide stretcher over the covered frame
-  { shots: ["5", "6"], draw(ts, i) {
-    plate("pl-troi-am", 4, 12, 0.5);
-    ground("#e8edf3", 1430);
-    if (i === 0) {
-      P("pc-khung", 640, 1690, 680);
-      P("pc-xuong", 950, 1790, 340);
-      P("pg-nang", 330, 1720, 450, { flip: F("nang", false) });
-    } else {
-      P("pc-khung", 640, 1690, 680);
-      P("pc-nha", 640, 1705, 690);
-      P("pg-keo", 250, 1730, 430, { flip: F("keo", false) });
-    }
-    snow(4, 0.3);
+  // the reveal: the storm breaks, the bone house stands ahead of them
+  { shots: ["3"], cut: "sheet", draw(ts) {
+    plate("pl-canh-nang", ts, 3.8);
+    smoke(640, G + 8 - tall("pc-nha", 620), ts, 0.7);
+    P("pc-nha", 640, G + 8, 620);
+    walk("pg-nhom", 200, G, 330, ts, 20);
+    chip(["MỘT CÁCH", "SINH TỒN"], 540, 690, pop(1.5, ts), { size: 46 });
+    snow(ts, 0.35);
   } },
 
-  // inside: the family around the fire, fur clothes, fur bedding, warm light
-  { shots: ["7"], draw() {
-    trongNha();
-    glow(540, 1280, 760, 0.32);
-    P("pg-gia-dinh", 540, 1600, 640, { flip: F("giadinh", false) });
-    flame(540, 1655, 150, 1);
-    rays(540, 1600, 2, 0.09);
-    P("pc-dem", 150, 1800, 430);
-    P("pc-dem", 940, 1800, 400, { flip: 1 });
+  // the animal the bones came from: a mammoth walks past behind the house, from the left
+  { shots: ["4"], cut: "band", draw(ts) {
+    plate("pl-canh-nang", ts, 4.4);
+    const mx = -300 + 250 * ts;
+    P("pg-mamut", mx, G + 8, 660, { flip: F("mamut", false) });
+    P("pc-nha", 830, G + 8, 500);
+    chip("VOI MA MÚT", Math.min(mx + 200, 420), 700, pop(0.9, ts), { size: 46 });
+    snow(ts, 0.3);
   } },
 
-  // the details: a close-up of the small entrance, the firelight in it, and the smoke leaving the roof
-  { shots: ["8"], draw() {
-    plate("pl-troi-am", 2, 9, 0.5);
-    ground("#e8edf3", 1500);
-    P("pc-nha", 540, 1990, 1024);
-    smoke(540, 1250, 2, 1);
-    glow(540, 1840, 300, 0.5);
-    gust(1, 1); snow(1, 1);
+  // building it: the bare bone frame with its labels and a carrier bringing a bone behind it (shot 5), then the hide
+  // cover rises over the frame while the hide carriers hold up their hides and grass goes round the foot (shot 6).
+  // The frame is drawn mirrored, so that its skull is on the right and the carrier has the ribs to walk behind. It
+  // stands a little behind the ground line and the covered hut a little in front of it: the hut has to be wider and
+  // taller than the frame it hides, and its foot must still stay above the captions
+  { shots: ["5", "6"], cut: "sheet", draw(ts, i, u) {
+    plate("pl-canh-nang", ts, 10.5);
+    const t6 = i ? ts - u : 99, lab = 1 - sm(t6 - 0.1, t6 + 0.3, ts); // t6 = when shot 6 began
+    walk("pg-nang", -280, G, 280, ts, 200);
+    P("pc-khung", 560, G - 14, 460, { flip: true });
+    P("pc-xuong", 960, G + 14, 150);
+    cover(sm(t6 + 0.5, t6 + 2.6, ts), 560, G + 30, 570);
+    P("pg-keo", 185, G + 20, 300 * pop(t6 + 2.2, ts), { flip: F("keo", false) });
+    P("pg-keo", 935, G + 20, 300 * pop(t6 + 2.35, ts), { flip: F("keo", true) });
+    for (let k = 0; k < 6; k++) tuft(340 + k * 88, G + 34, pop(t6 + 3.0 + k * 0.12, ts), k);
+    chip("HỘP SỌ", 942, 1090, pop(0.4, ts) * lab, { size: 42 });
+    chip("XƯƠNG SỜN", 240, 780, pop(1.1, ts) * lab, { size: 44 });
+    chip("NGÀ VOI", 920, 880, pop(1.8, ts) * lab, { size: 44 });
+    snow(ts, 0.3);
   } },
 
-  // the pull-back told as two held frames: the house alone, then far and tiny in the frozen plain
-  { shots: ["9", "10"], draw(ts, i) {
-    plate("pl-troi-am", 4, 14, 0.5);
-    ground("#e8edf3", 1460);
-    if (i === 0) {
-      P("pc-nha", 540, 1620, 540);
-      glow(540, 1560, 240, 0.45);
-      smoke(540, 1200, 2, 0.9);
-    } else {
-      P("pc-nha", 540, 1520, 300);
-      glow(540, 1480, 150, 0.4);
-      smoke(540, 1300, 2, 0.7);
-      P("pg-nhom", 160, 1560, 150, { flip: F("nhom", false) });
-      sparkles(540, 1000, 300, 2, 6);
-    }
-    snow(3, i === 0 ? 0.8 : 0.5);
+  // inside: the family around the fire, fur clothes, fur bedding, warm light. The iris closes on the covered hut
+  // and opens on the fire
+  { shots: ["7"], cut: "iris", iris: [537, 1000], draw(ts) {
+    trong(ts);
+    glow(537, 1000, 620, 0.28, ts);
   } },
 
-  // the last wide shot at dusk: the storm hangs, the firelight stays on
-  { shots: ["kết"], draw() {
-    back("pl-chieu", 2, 7);
-    ground("#e2e8ef", 1500);
-    P("pc-nha", 540, 1560, 460);
-    glow(540, 1500, 220, 0.55);
-    smoke(540, 1170, 2, 0.8);
-    snow(2, 0.7);
+  // the details: a close-up of the hut, the firelight in its small entrance and the smoke leaving the roof
+  { shots: ["8"], cut: "band", draw(ts) {
+    plate("pl-canh-bao", ts, 5.6);
+    const w = 1250 + 40 * sm(0, 5.6, ts), h = tall("pc-nha", w);
+    P("pc-nha", 540, 1900, w);
+    const ex = 540 + DOOR[0] * w, ey = 1900 - DOOR[1] * w;
+    glow(ex, ey, 190, 0.6, ts);
+    smoke(560, 1900 - h + 10, ts, 1);
+    chip("LỐI VÀO NHỎ", ex + 290, ey - 40, pop(0.5, ts), { size: 40 });
+    chip("LỖ THOÁT KHÓI", 560, 1900 - h - 80, pop(2.9, ts), { legs: 90, size: 40 }); // long enough for the right pole, the higher one of the askew strip, to reach the roof
+    gust(ts, 1); snow(ts, 0.8);
+  } },
+
+  // the ending at dusk: in on the house, out to the settlement, then slowly in again as the family comes home
+  { shots: ["9", "10", "kết"], cut: "sheet", draw(ts, i, u) {
+    plate("pl-canh-chieu", ts, 14);
+    const k = i === 0 ? 1 + 0.06 * sm(0, 3.3, u) : i === 1 ? 1.06 - 0.16 * sm(0, 4.6, u) : 0.9 + 0.12 * sm(0, 5, u);
+    out.save(); out.translate(540, G); out.scale(k, k); out.translate(-540, -G);
+    P("pc-nha", 150, G - 50, 190);
+    P("pc-nha", 930, G - 30, 240);
+    smoke(540, G + 50 - tall("pc-nha", 470), ts, 0.7);
+    P("pc-nha", 540, G + 50, 470);
+    glow(540 + DOOR[0] * 470, G + 50 - DOOR[1] * 470, 120, 0.55, ts);
+    walk("pg-nhom", -200, G + 10, 250, ts, 34);
+    out.restore();
+    snow(ts, 0.45);
+    sparkles(540, 420, 380, ts, 7);
   } },
 ];
 
-start({ plates: PLATES, cuts: CUTS, scenes: SCENES, look: "toon" });
+start({ plates: PLATES, cuts: CUTS, scenes: SCENES, look: "storybook", stickers: CUTS.filter((n) => n.startsWith("pc-")) });

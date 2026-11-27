@@ -1,5 +1,6 @@
 // The shot list of "Surviving the Ice Age in a mammoth-bone house": one short sentence per shot,
-// vertical cartoon short. Every line is the user's script, word for word — the same script as
+// vertical short in the paper-cut storybook look (the caption chunks are burned in, as in the reference
+// the user chose on 2026-11-23). Every line is the user's script, word for word — the same script as
 // nha-xuong-mamut-hoathinh; this folder is the user's re-make under the new name tien-su-hoat-hinh.
 // The dwelling is real: Upper Palaeolithic houses built from mammoth bones are known across the
 // East European Plain (Mezhirich, Mezin, Dobranichevka in Ukraine, roughly 15,000-20,000 years
@@ -7,7 +8,6 @@
 // insulated with grass and earth, small entrances, smoke holes, fur clothing and fur bedding.
 // The figures were written from memory of published estimates; nobody has re-checked them.
 const TEMPO = 1.3; // from content.json (the user chose the fastest allowed read)
-const SUBS = false;
 const SHOTS = [
   { label: "hook", mood: "wonder", hot: ["Kỷ Băng Hà"], lines: [[null, "Bạn có thể sống sót qua mùa đông khắc nghiệt của Kỷ Băng Hà bằng cách nào?"]] },
   { label: "1", mood: "tense", hot: ["20.000 năm trước"], lines: [[null, "Khoảng 20.000 năm trước, con người phải đối mặt với những mùa đông lạnh giá khủng khiếp."]] },

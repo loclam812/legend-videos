@@ -1,10 +1,21 @@
 <!doctype html>
 <html lang="vi"><head><meta charset="utf-8"><title>Paper-cut story</title>
 <style>
+  /* the storybook caption face (giay/fonts, SIL Open Font License) */
+  @font-face { font-family: Montserrat; src: url(fonts/Montserrat.ttf); font-weight: 100 900; }
   html, body { margin: 0; background: #000; overflow: hidden; }
   canvas { display: block; width: 540px; height: 960px; }
   #cap { position: fixed; left: 27px; width: 486px; top: 660px; text-align: center; font: 900 41px/1.12 "Avenir Next", "Helvetica Neue", Arial, sans-serif; text-transform: uppercase; color: #fff; -webkit-text-stroke: 5px #1c0f08; paint-order: stroke fill; text-shadow: 0 3px 8px #000a; }
   #cap .hot { color: #f6c453; }
+  /* the storybook look: the caption fading out sits behind the current one; each is an outline copy under a fill copy */
+  #capb { display: none; position: fixed; left: 27px; width: 486px; text-align: center; }
+  .storybook #cap, .storybook #capb { top: 625px; font: 900 40px/1.025 Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif; -webkit-text-stroke: 0; text-shadow: none; text-wrap: balance; }
+  .storybook #capb { display: block; }
+  .storybook #cap { z-index: 1; }
+  .storybook #cap > div, .storybook #capb > div { text-transform: uppercase; text-align: center; }
+  .storybook .k { position: absolute; left: 0; width: 100%; -webkit-text-stroke: 12px #1f1408; -webkit-text-fill-color: transparent; text-shadow: 8px 10px 9px rgba(15,8,4,.65); }
+  .storybook .f { position: relative; background: linear-gradient(#ffea6c, #f8c822 68%, #eeb113); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .storybook .f .hot { -webkit-text-fill-color: #fff6d9; }
   #card { position: fixed; left: 0; width: 540px; top: 170px; text-align: center; font-family: Georgia, "Times New Roman", serif; font-weight: 700; color: #f2c14e; -webkit-text-stroke: 6px #2a1608; paint-order: stroke fill; display: none; }
   .wide canvas { width: 960px; height: 540px; }
   .wide #cap { left: 80px; width: 800px; top: 452px; font-size: 30px; -webkit-text-stroke-width: 4px; }
@@ -12,7 +23,7 @@
   #card small { display: block; font-size: 24px; color: #fffaf0; -webkit-text-stroke: 4px #2a1608; margin-bottom: 14px; }
   #card b { display: block; font-size: 62px; line-height: 1; }
   #card i { display: block; font-style: normal; font-size: 62px; line-height: 1.15; }
-</style></head><body><canvas id="out" width="1080" height="1920"></canvas><div id="cap"></div><div id="card"></div>
+</style></head><body><canvas id="out" width="1080" height="1920"></canvas><div id="cap"></div><div id="capb"></div><div id="card"></div>
 <script>
   // served from the repo root as /giay/trang.html?truyen=<story folder>; the order matters: shot list, engine, then the story's scenes
   const story = new URLSearchParams(location.search).get("truyen");

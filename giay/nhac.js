@@ -26,6 +26,14 @@ fs.writeFileSync(path.join(xuat, "tieng", "list.txt"), list.join("\n"));
 const voice = path.join(xuat, "loi-ke.wav");
 ff(["-f", "concat", "-safe", "0", "-i", path.join(xuat, "tieng", "list.txt"), "-c", "copy", voice]);
 
+const am = path.join(xuat, "am.m4a");
+// "off" = no music bed: the joined narration alone, levelled the same way, into the file the recorder expects
+if (process.argv[3] === "off") {
+  ff(["-i", voice, "-af", "loudnorm=I=-15:TP=-1.5:LRA=11,aresample=44100", "-c:a", "aac", "-b:a", "160k", am]);
+  console.log(`voice only -> ${am}`);
+  process.exit(0);
+}
+
 // level 0..3: how much plays; root: the drone under the same five notes (F makes them sound major)
 const MOOD = { battle: [3, "D"], tense: [2, "D"], calm: [1, "D"], wonder: [1, "D"], sad: [0.6, "D"], bright: [2, "F"] };
 let at = 0;
@@ -217,6 +225,5 @@ const wav = path.join(xuat, "nhac.wav");
 fs.writeFileSync(wav, pcm);
 
 const mix = "[0:a]asplit[v1][v2];[1:a][v1]sidechaincompress=threshold=0.1:ratio=2.5:attack=15:release=500[b];[v2][b]amix=inputs=2:normalize=0:duration=longest,loudnorm=I=-15:TP=-1.5:LRA=11,aresample=44100[a]";
-const am = path.join(xuat, "am.m4a");
 ff(["-i", voice, "-i", wav, "-filter_complex", mix, "-map", "[a]", "-c:a", "aac", "-b:a", "160k", am]);
 console.log(`music "${MUSIC}" ${total.toFixed(1)}s, peak ${(peak * gain).toFixed(2)} -> ${am}`);

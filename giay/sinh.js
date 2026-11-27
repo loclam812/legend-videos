@@ -23,6 +23,9 @@ const helpers = {
   prop: (what, size = [1024, 768]) => ({ size, keyed: 1, prompt: `${what}, ${KEY}.` }),
   // a keyed whole figure
   puppet: (who, size = [768, 1024]) => ({ size, keyed: 1, prompt: `One full-body paper puppet, the whole figure visible from head to feet: ${who}. Simple flat shapes, ${KEY}.` }),
+  // a keyed thing the model could not be made to draw with the right structure: a script in the story folder draws it
+  // as a png on the same flat magenta; given the output path it writes there (see ten-lua-elon-musk/ve-co.js)
+  drawn: (script, size) => ({ size, keyed: 1, script }),
 };
 const story = require(path.join(dir, "anh.js"));
 const IMAGES = story(helpers);
@@ -38,11 +41,17 @@ fs.mkdirSync(OUT, { recursive: true });
 for (const [name, seed] of jobs) {
   const image = IMAGES[name];
   if (!image) { console.error(`unknown image: ${name}`); process.exit(1); }
+  const started = Date.now();
+  if (image.script) {
+    const run = spawnSync("node", [path.join(dir, image.script), file(name)], { stdio: "inherit" });
+    if (run.status !== 0) { console.error(`${name}: ${image.script} failed`); process.exit(1); }
+    console.log(`${name} drawn by ${image.script} ${((Date.now() - started) / 1000).toFixed(0)}s`);
+    continue;
+  }
   const [width, height] = image.size || [864, 1536];
   // mflux never overwrites: it would write name_1.png beside the old image
   const png = path.join(OUT, `${name}.png`);
   for (const old of [png, file(name)]) fs.rmSync(old, { force: true });
-  const started = Date.now();
   const run = spawnSync(path.join(BIN, "mflux-generate-flux2"), ["--model", "flux2-klein-4b", "--quantize", "4", "--steps", "4", "--seed", String(seed),
     "--width", String(width), "--height", String(height), "--prompt", `${story.style || PAPER}. ${image.prompt}`, "--output", png], { env: ENV, stdio: ["ignore", "ignore", "pipe"] });
   if (run.status !== 0) { console.error(`${name}: failed\n${String(run.stderr).slice(-600)}`); process.exit(1); }

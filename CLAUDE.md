@@ -39,6 +39,7 @@ it), because no prompt ever removed it.
 | `300-trieu-nam-giay-en/` | English cut of the 300-million-year video, read by Kokoro at its own pace (8.5 minutes, past the 8-minute mark for mid-roll ads) | `300-trieu-nam-giay-en.mp4` |
 | `chuon-chuon-giay-en/`, `cuon-chieu-giay-en/`, `than-da-giay-en/`, `chay-rung-giay-en/`, `ca-map-giay-en/` | Five tall Shorts cut from the 300-million-year video (Meganeura, Arthropleura, coal, wildfires, sharks), 30 to 45 s each: new scripts, the long video's layers copied and laid out again for 1080x1920 | `<folder>.mp4` |
 | `megalodon-dai-giay-en/`, `megalodon-can-giay-en/`, `megalodon-tuyet-chung-giay-en/` | Three Megalodon Shorts (size, bite, extinction), 17 to 27 s, testing a new hook: the animal and the claim are on screen at frame 0, no opening scene | `<folder>.mp4` |
+| `titanoboa-giay-en/`, `quetzalcoatlus-giay-en/`, `dunkleosteus-giay-en/` | Three "real monsters" Shorts in the same hook format, 27 to 29 s; upload texts in `kenh/dang/quai-vat.md` | `<folder>.mp4` |
 
 The stories share some layers (skies, sea, ground, hut, King Hùng): the png or jpg is copied into each
 story's `anh/` and its prompt repeated in `anh.js`, so every folder still builds on its own.

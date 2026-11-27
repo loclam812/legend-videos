@@ -24,6 +24,15 @@ look `cutOut` in `giay/may.js` also eats the grey contact shadow the model paint
 every `pg-` puppet (grey reachable from empty space below; outlines and coloured fills stop
 it), because no prompt ever removed it.
 
+A third look is the storybook one, `look: "storybook"` passed to `start` in `canh.js`: yellow Montserrat
+captions in short chunks that crossfade, paper labels (`chip`), torn-sheet, black-band and iris
+transitions. An English cut of a story is its own folder with the same `anh/`, `anh.js` and scenes, an
+English `loi.js` and English labels in `canh.js` (`tien-su-hoat-hinh-en/` is the English cut of
+`tien-su-hoat-hinh/`). A Vietnamese cut of an English story is made the same way, in a folder ending in
+`-vi` (`vi-khuan-trong-co-the-giay-vi/`), and takes its `TEMPO` and narrator from what the user chose for
+the script (`xuat/content.json` of the English folder: its tempo and its `nam` or `nu`), not from the
+default narrator and speed.
+
 | Folder | Story | Output |
 |---|---|---|
 | `bach-dang-giay/` | Bạch Đằng 938 (Ngô Quyền), 23 shots | `bach-dang-giay.mp4` |
@@ -51,17 +60,28 @@ A paper-cut story folder holds three files and `anh/`; the engine is shared in `
   labelled `kết` and shows the title card. `const SUBS = false` burns in no subtitles and leaves only the paper labels on things in the picture (the
   user asked for that on the science stories). `const LANG = "en"` makes it an English story (see Narration);
   an English cut is its own `-en` folder with copies of `anh/`, `anh.js` and `canh.js`, its labels and title card in English.
+  <!-- labelled `kết` and shows the title card. `const VOICE = "en-US-AndrewNeural"` names the edge-tts voice
+  that reads the narrator and anyone unlisted: a story in another language needs it.
+  `const SUBS = false` burns in no subtitles and leaves only the paper labels on things in the picture (the
+  user asked for that on the science stories, which will also be made in English). -->
   `const WIDE = true` in this file makes the story 1920x1080
   instead of 1080x1920: a long video, several sentences per shot, subtitles along the bottom.
 - `anh.js`: the layers, built with `plate` (full-frame backdrop, stored as jpg), `prop` and `puppet`
   (painted on flat magenta and stored as png, so the page can key them out). A wide story passes
   `[1536, 864]` to `plate`. A story that is not a folk tale sets `module.exports.style`, because the
-  default look asks for Vietnamese woodblock motifs.
+  default look asks for Vietnamese woodblock motifs. `drawn("ve-….js", [w, h])` is a keyed layer that
+  a script in the story folder draws on the same magenta instead of the model (`sinh.js` runs it when
+  the png is missing; `soat.js` checks only its size): for a machine whose parts the model will not
+  put in the right places or in the right number, as the engine and the rocket of
+  `ten-lua-elon-musk/` (`ve-co.js`, `ve-sls.js`, measured from frames of the source video).
 - `canh.js`: `PLATES`, `CUTS` and `SCENES`, then `start({ plates, cuts, scenes, card })`. A scene
   serves one or more shots in a row and draws them with `draw(ts, i, u, line, v)`: seconds since the
   scene began, which of its shots is playing, seconds into that shot, which sentence of the shot is
   being read and seconds into that sentence. A sheet of paper slides across when
-  the scene changes.
+  the scene changes; in the storybook look each scene's `cut` chooses how it enters, and the change is centred
+  on the first frame of the new scene's first shot: it covers the old shot in the last part of the half-second
+  gap and uncovers the new one in its first (the lengths are `half` in `giay/may.js`, 0.36 s a side at most),
+  so what a scene draws in its first 0.2 s is still under the cover.
 - `giay/may.js` is the engine: `P(name, x, y, w, { rot, flip, alpha })` draws a layer with its
   bottom centre at (x, y) on the 1080x1920 frame, and there are `plate`, `sea`, `rays`, `tag`,
   `ring`, `bubble`, `shards`, `confetti`, `sparkles`, `tears`, `pop`, `hop`, `sm`, and `space` and `globe`
@@ -76,6 +96,7 @@ node giay/sinh.js <story-folder> all     # the layers that are missing; <name>:<
 node doc.js <story-folder>               # narration into xuat/tieng and xuat/durs.json
 node giay/nhac.js <story-folder> [off]   # xuat/am.m4a: narration over the music, or narration only with "off"
 node giay/quay.js <story-folder> sheet   # xuat/kiem.jpg: three frames of every shot. Look at it.
+node giay/khung.js <story-folder> all:0.5 # xuat/khung/: a full-size still of every shot. Read them too.
 node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and .srt (subtitle timeline)
 ```
 
@@ -103,6 +124,28 @@ node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and
   `.env` needs `PLAYWRIGHT_PATH`. When Playwright reports `Executable doesn't exist`, its own
   Chromium build is gone from `~/Library/Caches/ms-playwright`: reinstall it, or put
   `CHROME=<path to another chrome-headless-shell>` in `.env`. Every recorder in the repo reads it.
+- `giay/khung.js` takes full-size single frames where the sheet is too small (its cells are 216x384 px):
+  `node giay/khung.js <story-folder> all:0.5` is one still of every shot mid-narration, `<label>:<fraction>` a
+  share of a shot's narration, `<label>:+0.5` the first frame of the next shot, `<label>:cut` every recorded
+  frame across the scene change after it (in `xuat/khung/cut-<label>/`), a bare number seconds from the start;
+  with `mp4` before the moments it pulls the same frames from the recorded file, under the same names in
+  `xuat/khung/mp4/` (git ignores `xuat/khung/`, and every run of `quay.js` empties it). Take stills of every
+  place where things meet before the recording: a flaw found in a still costs a minute, after the recording it
+  costs the recording.
+- A scene change is motion, and one still of it shows nothing wrong even when it pops or doubles. Before a
+  recording take `<label>:cut` for one change of each kind the story uses and look at the frames side by side
+  (tile them eight at most to a picture: the command is at the top of `giay/khung.js`); after it run
+  `node giay/nhay.js <story-folder>` (needs no `.env`), which lists every frame that jumps from both its
+  neighbours — there must be none where the story has a transition — and the frame-to-frame steps across the
+  end of every shot. From the storybook restyle (2026-11-23) until 2026-11-24 its sheet and iris covered the
+  old page, uncovered it and covered it again in every recording, and four cuts of `ten-lua-elon-musk/` went
+  out with it because only single moments had been checked; the user saw it at once ("Chuyển cảnh đang bị
+  duplicate").
+- A story retold from a source video (`ten-lua-elon-musk/`, from one of the user's TikTok explainers) is read
+  first: one frame a second, tiled into contact sheets, in a scratch directory outside the repo. Its captions
+  are retold in other words, each sentence keeps a note of what the screen showed then (`sourceNotes` in
+  `content.json`), and each scene is built on that picture; a machine the source draws is drawn by code,
+  measured on its frames. `/kichban` and `/chuanbi` have the steps.
 - What the model gets wrong, so check for it: a sky plate often comes back as a sheet of paper with a
   pale border (draw it enlarged, see `back` in `300-trieu-nam-giay/canh.js`, or draw it by code, as
   `space` does); slim standing puppets are much taller than wide ones at the same width; an animal
@@ -114,6 +157,18 @@ node giay/quay.js <story-folder>         # <story-folder>/<story-folder>.mp4 and
   hypothesis). It read search summaries, not the papers, and some claims (the 20 km/s speed, the 3000 km to
   Tanis, the sharks, crinoids and cockroaches) found no source. The Vietnamese mp4s were recorded before that fix.
 - Captions cover about 1320 to 1430 px in a short and the bottom 160 px in a wide story.
+- The caption chunker (`chunks` in `giay/may.js`) was tuned for Vietnamese. Its rule that a storybook caption
+  does not end on a word of three letters or fewer moves an English word such as "out," to the start of the
+  next caption ("…the cold air | out, while…"). Reword the line, as shot 8 of `tien-su-hoat-hinh-en/loi.js`
+  does, rather than change the engine, which would move the captions of every recorded story. The browser
+  breaks a storybook caption that runs to two lines at its width middle (`text-wrap: balance`), which in
+  Vietnamese often falls inside a compound ("CÁC NHÀ KHOA / HỌC"): word the line, or glue the words as one
+  hot phrase, until every caption breaks between words, and measure the chunks in the page's caption box
+  before recording, as `vi-khuan-trong-co-the-giay-vi/loi.js` does.
+- A caption takes 0.28 s to fade in, and a chunk lasts its line's speaking time in proportion to its letters, so
+  before recording an English cut list the length of every caption: one under about half a second is a flash.
+  "…at the same time: that is regenerative cooling." left "that is" on screen for 0.33 s; shot 16 of
+  `ten-lua-elon-musk-en/loi.js` now ends on the name as its own sentence.
 - The machine has 24 GB and swaps heavily when other apps are open: run one heavy job at a time
   (generation or recording, not both). On 2026-11-20 Claude Code stopped both for low memory.
 - Generated pictures are not checked against history or custom: costumes, ships and helmets are the
@@ -126,14 +181,17 @@ removed on 2026-11-20; they are in git history up to `f77217d`.
 
 Four slash commands wrap that order with a review pause between stages. `content.json`
 at the repo root (gitignored) carries the script, the settings and the status between
-them: `/kichban <tệp kịch bản|nội dung> <voice-over> [nu|nam|linh] [speed=] [music=]
-[style=] [format=] [len=] [folder=]` writes it (the script verbatim); `/chuanbi` analyses the script, writes the
+them: `/kichban <tệp kịch bản|video|nội dung> <voice-over> [nu|nam|linh] [speed=] [music=]
+[style=] [format=] [len=] [folder=]` writes it (the script verbatim; a video is read from its captions and
+retold in other words); `/chuanbi` analyses the script, writes the
 folder's `loi.js`/`anh.js`/`canh.js` plus `VOICES` entries in `doc.js` for new speakers
 and estimated `durs.json`, then — after asking — generates the layers (rerunning it
-resumes; `sinh.js all` only makes missing files); `/soatanh` checks every layer with
-`node giay/soat.js <folder>` and with its own eyes, fixes the `LEFT` facings, writes the
+resumes; `sinh.js all` only makes missing files) and fits the scenes to them in
+full-size stills; `/soatanh` checks every layer with
+`node giay/soat.js <folder>` and with its own eyes (every cut-out of a real thing beside the frame of the
+source, part for part and counted), fixes the `LEFT` facings, writes the
 per-image status and offers `sinh.js <name>:<seed>` for the bad ones; `/quay` records
-voice → music → `kiem.jpg` sheet, saves `status.pausedAt = "sheet"` and WAITS — `/quay
+voice → music → `kiem.jpg` sheet → full-size stills, saves `status.pausedAt = "sheet"` and WAITS — `/quay
 tiep` resumes straight at the recording if voice, music and sheet are still fresh. It
 refuses when an image's mtime no longer matches its checked status. `soat.js` checks the
 cheap facts (file, size, mtime): exit 0 all pass, 1 something off, 2 `anh.js` broken.
@@ -158,6 +216,20 @@ each character with its own pitch in the `VOICES` table of `doc.js`.
 
 - `const TEMPO = 1.1` in a story's `loi.js` reads it 10 % faster (the user asked for that on the two
   science stories). It is applied to the saved recordings, so changing it needs no network.
+  An English cut does not take the Vietnamese cut's speed unasked: `ten-lua-elon-musk/` reads at 1.5 and
+  `ten-lua-elon-musk-en/` at 1.3 (about 220 words a minute), both the user's choice — the second given on
+  2026-11-24 after the English cut had been recorded at the 1.5 of the Vietnamese one (about 253 words a
+  minute). Ask which speed an English cut should read at before recording it.
+- `const VOICE = "<edge-tts voice>"` in a story's `loi.js` makes that voice the narrator and the voice of anyone
+  unlisted, whatever `nam` says. The voice cache is keyed on the voice, so an English cut never reuses the
+  Vietnamese recordings.
+- A caption, and a label placed by letters, can miss an English word by up to a second ("SLS" follows "RS-25",
+  which takes a second to say). `ten-lua-elon-musk-en/canh.js` hangs its labels on the voice's own word marks
+  instead: a `HEARD` table of when each phrase is spoken, read from edge-tts's `WordBoundary` events (the Python
+  API, `edge_tts.Communicate(text, voice, boundary="WordBoundary")`; the CLI writes sentence cues only) and
+  scaled by `said()` to the line as `TEMPO` reads it. The table holds the wording each line was read from, so a
+  reworded line falls back to the letter count until its marks are read again; `said()` finds its phrase as
+  spelled, capitalisation included.
 - **The online voices refuse requests at random.** edge-tts is an unofficial free endpoint and answers
   `NoAudioReceived` in bursts. `doc.js` waits and retries, and keeps every line it got in
   `xuat/giong-luu/` by voice and wording, so rerunning only fetches what is missing.
@@ -175,8 +247,10 @@ each character with its own pitch in the `VOICES` table of `doc.js`.
 
 ## Checking the result
 
-- Nobody can judge the picture from the code: look at `xuat/kiem.jpg` before the full recording, and
-  compare the video and audio stream lengths with `ffprobe` after it.
+- Nobody can judge the picture from the code: look at `xuat/kiem.jpg` and at full-size stills
+  (`giay/khung.js`) before the full recording, and compare the video and audio stream lengths with `ffprobe`
+  after it, then run `node giay/nhay.js <story-folder>`: an isolated jump at a scene change means the
+  recording is not done.
 - Claude cannot hear. Voice quality, mispronounced words and the music are for the user to check, and
   the report must say so. The music is synthesized: its level is measured, its taste is not.
 - **Exported mp4 files stay out of git** (`*.mp4` is ignored): GitHub rejects any file over 100 MB.
